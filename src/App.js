@@ -1,19 +1,37 @@
+import "./App.css";
+import Head from "./components/Head";
+import Body from "./components/Body";
+import { Provider } from "react-redux";
+import store from "./utils/store";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+import MaineContainer from "./components/MaineContainer";
+import WatchPage from "./components/WatchPage";
+const appRouter = createBrowserRouter([
+    {
+        path: "/",
+        element: <Body />,
+        children: [
+            {
+                path: "/",
+                element: <MaineContainer />,
+            },
+            {
 
-import './App.css';
-import Head from './components/Head';
-import Body from './components/Body';
-import { Provider } from 'react-redux';
-import store from './utils/store';
-
+                path: "watch",
+                element: <WatchPage />,
+            },
+        ],
+    },
+]);
 function App() {
-  return (
-      <Provider store={store}>
-          <div>
-              <Head />
-              <Body />
-          </div>
-      </Provider>
-  );
+    return (
+        <Provider store={store}>
+            <div>
+            <Head />
+                <RouterProvider router={appRouter} />
+            </div>
+        </Provider>
+    );
 }
 
 export default App;
