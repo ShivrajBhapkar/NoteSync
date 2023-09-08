@@ -1,7 +1,27 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
+import { YOUTUBE_SEARCH_API } from "../utils/constants";
 const Head = () => {
+    const [searchQuery, setSearchQuery] = useState("");
+    useEffect(() => {
+        // Make an API call after every key press
+        // but if the difference between 2 API calls is <200ms
+        // decline the API call
+        // Its working like if we press one key on keyboard it register callback function and attach timer of 200ms
+        //  to it but if we press another key before 200ms it will destory previous callback function that's way its
+        //  manage to call Api after every 200ms and not before 200ms.
+          const timer = setTimeout(() => getSearchSuggestions(), 200);
+          return () => {
+              clearTimeout(timer);
+          };
+    }, [searchQuery])
+  
+    const getSearchSuggestions = async () => {
+        const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
+        const json = await data.json();
+        console.log(json[1]);
+    }
     const dispatch = useDispatch();
     const toggleMenuHandler = () => {
         dispatch(toggleMenu())
@@ -22,7 +42,7 @@ const Head = () => {
                 />
             </div>
             <div className="col-span-10 px-10">
-                <input type="text" className="rounded-l-full border border-gray-400 w-1/2 p-2" />
+                <input type="text" value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="rounded-l-full border border-gray-400 w-1/2 p-2" />
                 <button className="rounded-r-full border border-gray-400 px-5 py-2 bg-gray-100">🔍</button>
             </div>
             <div className="col-span-1">
