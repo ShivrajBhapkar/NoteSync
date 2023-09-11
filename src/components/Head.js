@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { toggleMenu } from "../utils/appSlice";
 import { YOUTUBE_SEARCH_API } from "../utils/constants";
+import { cacheResults } from "../utils/searchSlice"
 const Head = () => {
     const [searchQuery, setSearchQuery] = useState("");
+    const [suggestions, setSuggestions] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+    const searchCache = useSelector((store) => store.search);
+
     useEffect(() => {
         // Make an API call after every key press
         // but if the difference between 2 API calls is <200ms
@@ -11,23 +16,36 @@ const Head = () => {
         // Its working like if we press one key on keyboard it register callback function and attach timer of 200ms
         //  to it but if we press another key before 200ms it will destory previous callback function that's way its
         //  manage to call Api after every 200ms and not before 200ms.
-          const timer = setTimeout(() => getSearchSuggestions(), 200);
-          return () => {
-              clearTimeout(timer);
-          };
-    }, [searchQuery])
-  
+        const timer = setTimeout(() => {
+            
+            if (searchCache[searchQuery]) {
+                // If result for current keyword is alredy present in the cache then return that result
+                setSuggestions(searchCache[searchQuery]);
+            } else {
+                // If result for current keyword is not present in the cache then add it to the cache
+                getSearchSuggestions()
+            }
+        }, 200);
+        return () => {
+            clearTimeout(timer);
+        };
+    }, [searchQuery]);
+
     const getSearchSuggestions = async () => {
         const data = await fetch(YOUTUBE_SEARCH_API + searchQuery);
         const json = await data.json();
-        console.log(json[1]);
-    }
+        // console.log(json[1]);
+        setSuggestions(json[1]);
+        dispatch(cacheResults({
+            [searchQuery]: json[1],
+        }));
+    };
     const dispatch = useDispatch();
     const toggleMenuHandler = () => {
-        dispatch(toggleMenu())
-    }
+        dispatch(toggleMenu());
+    };
     return (
-        <div className="grid grid-flow-col p-5 m-2 shadow-lg">
+        <div className="grid grid-flow-col p-5 m-2 shadow-lg ">
             <div className="flex col-span-1">
                 <img
                     onClick={() => toggleMenuHandler()}
@@ -42,8 +60,28 @@ const Head = () => {
                 />
             </div>
             <div className="col-span-10 px-10">
-                <input type="text" value={searchQuery} onChange={(e)=>setSearchQuery(e.target.value)} className="rounded-l-full border border-gray-400 w-1/2 p-2" />
-                <button className="rounded-r-full border border-gray-400 px-5 py-2 bg-gray-100">🔍</button>
+                <div>
+                    <input
+                        type="text"
+                        value={searchQuery}
+                        onChange={(e) => setSearchQuery(e.target.value)}
+                        className="rounded-l-full border border-gray-400 w-1/2 p-2 px-5"
+                        onFocus={() => setShowSuggestions(true)}
+                        onBlur={()=>setShowSuggestions(false)}
+                    />
+                    <button className="rounded-r-full border border-gray-400 px-5 py-2 bg-gray-100">
+                        🔍
+                    </button>
+                </div>
+        {showSuggestions && (<div className="absolute bg-white py-2 px-3 w-[31rem] shadow-lg rounded-lg border border-gray-100">
+            <ul>
+                {suggestions.map((s) => (
+                    <li key={s} className="py-2 px-3 shadow-sm hover:bg-gray-100">
+                        🔍{s}
+                    </li>
+                ))}
+            </ul>
+        </div>)}
             </div>
             <div className="col-span-1">
                 <img
