@@ -4,6 +4,7 @@ import MaineContainer from "./components/MaineContainer";
 import WatchPage from "./components/WatchPage";
 import Demo from "./components/Demo";
 import UserUnTrackPlayList from "./components/UserUnTrackPlayList"
+import LoginComponent from "./components/LoginComponent";
 import { createBrowserRouter } from "react-router-dom";
 
 const appRouter = createBrowserRouter([
@@ -25,8 +26,12 @@ const appRouter = createBrowserRouter([
             },
             {
                 path: "UnTrack",
-                element:<UserUnTrackPlayList/>
-            }
+                element: <UserUnTrackPlayList />,
+            },
+            {
+                path: "login",
+                element: <LoginComponent/>,
+            },
         ],
     },
 ]);
