@@ -2,13 +2,20 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
 import { login } from "../utils/authenticationSlice";
+import { useSelector } from "react-redux";
 import axios from "../axios-config";
-import { useNavigate } from "react-router-dom";
+import { useNavigate , Navigate} from "react-router-dom";
+
 const LoginComponent = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const dispatch = useDispatch();
     const navigate = useNavigate(); // Use the useNavigate hook
+    const userId = useSelector((store) => store.authentication.userId);
+
+    if (userId) {
+      return <Navigate to="/" replace/>
+    }
     const handleLogin = async () => {
         try {
             const response = await axios.post("/auth/login", {
