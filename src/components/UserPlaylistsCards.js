@@ -1,6 +1,6 @@
 import React from "react";
 
-const UserVideoCards = ({ playlistInfo }) => {
+const UserPlaylistsCards = ({ playlistInfo }) => {
     // const { snippet, statistics } = info;
     // const { channelTitle, title, thumbnails } = snippet;
 
@@ -19,4 +19,4 @@ const UserVideoCards = ({ playlistInfo }) => {
     );
 };
 
-export default UserVideoCards;
+export default UserPlaylistsCards;

@@ -2,22 +2,23 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../axios-config";
-import UserVideoCards from "./UserVideoCards";
+import UserPlaylistsCards from "./UserPlaylistsCards";
+import { useSelector } from "react-redux";
 const UserUnTrackPlayList = () => {
-    const [videos, setVideos] = useState([]);
+    const [playlists, setPlaylists] = useState([]);
     useEffect(() => {
         getVideos();
     }, []);
-
+     const userId = useSelector((store) => store.authentication.userId);
     const getVideos = async () => {
         try {
             const response = await axios.get(
-                "/users/651820da85f87f76d467a6f4/untrackPlaylists"
+                `/users/${userId}/untrackPlaylists`
             );
 
             if (response.status === 200) {
                 const data = response.data;
-                setVideos(data);
+                setPlaylists(data);
             } else {
                 console.error("Failed to fetch data");
             }
@@ -27,9 +28,9 @@ const UserUnTrackPlayList = () => {
     };
     return (
         <div className="flex flex-wrap">
-            {videos.map((video) => (
-                <Link key={video.id}>
-                    <UserVideoCards playlistInfo={video} />
+            {playlists.map((playlist) => (
+                <Link key={playlist.playlistId}>
+                    <UserPlaylistsCards playlistInfo={playlist} />
                 </Link>
             ))}
         </div>
