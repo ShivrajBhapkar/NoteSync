@@ -2,20 +2,18 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../axios-config";
-import UserPlaylistsCards from "./UserPlaylistsCards";
+import UserLearningCards from "./UserLearningCards"
 import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 const UserUnTrackPlayList = () => {
     const [playlists, setPlaylists] = useState([]);
     useEffect(() => {
         getVideos();
     }, []);
-     const userId = useSelector((store) => store.authentication.userId);
+    const userId = useSelector((store) => store.authentication.userId);
     const getVideos = async () => {
         try {
             const response = await axios.get(
-                `/users/${userId}/untrackPlaylists`
+                `/users/${userId}/trackPlaylists`
             );
 
             if (response.status === 200) {
@@ -32,7 +30,7 @@ const UserUnTrackPlayList = () => {
         <div className="flex flex-wrap">
             {playlists.map((playlist) => (
                 <Link key={playlist.playlistId}>
-                    <UserPlaylistsCards playlistInfo={playlist} />
+                    <UserLearningCards playlistInfo={playlist} />
                 </Link>
             ))}
         </div>

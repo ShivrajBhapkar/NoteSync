@@ -35,10 +35,10 @@ const Sidebar = () => {
 
           <ul>
               <li>
-                  <a href="/UnTrack">My Playlists</a>
+                  <a href="/unTrack">My Playlists</a>
               </li>
               <li>
-                  <a href="/Track">My Learning</a>
+                  <a href="/track">My Learning</a>
               </li>
           </ul>
       </div>
