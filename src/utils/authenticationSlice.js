@@ -1,9 +1,12 @@
 import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
-    accessToken: JSON.parse(localStorage.getItem("User")).accessToken|| null,
-    refreshToken:JSON.parse(localStorage.getItem("User")).refreshToken || null,
-    userId: JSON.parse(localStorage.getItem("User")).userId|| null,
+    accessToken:
+        (JSON.parse(localStorage.getItem("User")) || {}).accessToken || null,
+    refreshToken:
+        (JSON.parse(localStorage.getItem("User")) || {}).refreshToken || null,
+    userId: (JSON.parse(localStorage.getItem("User")) || {}).userId || null,
 };
+
 
 const authenticationSlice = createSlice({
     name: "authentication",

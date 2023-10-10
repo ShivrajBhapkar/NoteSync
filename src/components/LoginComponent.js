@@ -13,7 +13,7 @@ const LoginComponent = () => {
     const navigate = useNavigate(); // Use the useNavigate hook
     const userId = useSelector((store) => store.authentication.userId);
 
-    if (userId) {
+    if (userId !== null) {
       return <Navigate to="/" replace/>
     }
     const handleLogin = async () => {

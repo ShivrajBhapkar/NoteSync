@@ -1,12 +1,24 @@
 import React from "react";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import Body from "./components/Body";
 import MaineContainer from "./components/MaineContainer";
 import WatchPage from "./components/WatchPage";
 import Demo from "./components/Demo";
-import UserUnTrackPlayList from "./components/UserUnTrackPlayList"
-import UserTrackPlayList from "./components/UserTrackPlayLists"
+import UserUnTrackPlayList from "./components/UserUnTrackPlayList";
+import UserTrackPlayList from "./components/UserTrackPlayLists";
 import LoginComponent from "./components/LoginComponent";
-import { createBrowserRouter } from "react-router-dom";
+import { useSelector } from "react-redux";
+
+const ProtectedRoute = ({ element, ...rest }) => {
+    const userId = useSelector((store) => store.authentication.userId);
+
+    if (userId !== null) {
+        return element;
+    } else {
+        // Redirect unauthenticated users to the login page
+        return <Navigate to="/login" />;
+    }
+};
 
 const appRouter = createBrowserRouter([
     {
@@ -19,19 +31,19 @@ const appRouter = createBrowserRouter([
             },
             {
                 path: "watch",
-                element: <WatchPage />,
+                element: <ProtectedRoute element={<WatchPage />} />,
             },
             {
                 path: "demo",
-                element: <Demo />,
+                element: <ProtectedRoute element={<Demo />} />,
             },
             {
                 path: "unTrack",
-                element: <UserUnTrackPlayList />,
+                element: <ProtectedRoute element={<UserUnTrackPlayList />} />,
             },
             {
                 path: "track",
-                element: <UserTrackPlayList />,
+                element: <ProtectedRoute element={<UserTrackPlayList />} />,
             },
             {
                 path: "login",

@@ -26,6 +26,7 @@ const UserUnTrackPlayList = () => {
             console.error("Error fetching data:", error);
         }
     };
+    console.log(playlists);
     return (
         <div className="flex flex-wrap">
             {playlists.map((playlist) => (

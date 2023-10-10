@@ -5,50 +5,55 @@ const instance = axios.create({
     baseURL: "http://localhost:3000/v1", // Your API base URL
 });
 
-const accessToken = JSON.parse(localStorage.getItem("User")).accessToken
+
 
 const refreshToken = async () => {
     try {
-        // Make a request to your refresh token API
-        const refreshToken = JSON.parse(localStorage.getItem("User")).refreshToken;
-        const response = await axios.post("/auth/refresh-tokens", {
-            refreshToken
-        });
+        const refreshToken = JSON.parse(
+            localStorage.getItem("User")
+        ).refreshToken;
+        const response = await axios.post(
+            "http://localhost:3000/v1/auth/refresh-tokens",
+            {
+                refreshToken: refreshToken,
+            }
+        );
 
         if (response.status === 200) {
-              const { access, refresh } = response.data;
-            const { token: newAccessToken } = access;
-            const { token: newRefreshToken } = refresh;
+            const { access, refresh } = response.data;
+            const newAccessToken = access.token;
+            const newRefreshToken = refresh.token;
 
-              // Get the existing user object from local storage
-              const existingUser = JSON.parse(localStorage.getItem("User"));
-
-              // Update the access token in the existing user object
-              existingUser.accessToken = newAccessToken;
+            // Update the user object in local storage
+            const existingUser = JSON.parse(localStorage.getItem("User"));
+            existingUser.accessToken = newAccessToken;
             existingUser.refreshToken = newRefreshToken;
-              // Update the access token in local storage
-              localStorage.setItem("User", JSON.stringify(existingUser));
+            localStorage.setItem("User", JSON.stringify(existingUser));
+
+            // Update the axios instance with the new access token
             instance.defaults.headers.common[
                 "Authorization"
             ] = `Bearer ${newAccessToken}`;
 
             // Retry the original request that triggered the token expiration
-            return instance.request(response.config);
-        } 
+              return instance.request(response.config);
+        }
     } catch (refreshError) {
         console.error("Error refreshing access token:", refreshError);
     }
 };
 instance.interceptors.request.use(
     (config) => {
-        config.headers.Authorization = `Bearer ${accessToken}`;
+        const user = JSON.parse(localStorage.getItem("User"));
+        if (user && user.accessToken) {
+            config.headers.Authorization = `Bearer ${user.accessToken}`;
+        }
         return config;
     },
     (error) => {
         return Promise.reject(error);
     }
 );
-
 // Add response interceptor
 instance.interceptors.response.use(
     (response) => {
