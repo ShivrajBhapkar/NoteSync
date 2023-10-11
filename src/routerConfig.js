@@ -7,6 +7,7 @@ import Demo from "./components/Demo";
 import UserUnTrackPlayList from "./components/UserUnTrackPlayList";
 import UserTrackPlayList from "./components/UserTrackPlayLists";
 import LoginComponent from "./components/LoginComponent";
+import PlaylistVideos from "./components/PlaylistVideos";
 import { useSelector } from "react-redux";
 
 const ProtectedRoute = ({ element, ...rest }) => {
@@ -45,6 +46,11 @@ const appRouter = createBrowserRouter([
                 path: "track",
                 element: <ProtectedRoute element={<UserTrackPlayList />} />,
             },
+            {
+                path: "/playlist/:playlistId",
+                element:<ProtectedRoute element={<PlaylistVideos/>}/>
+            },
+
             {
                 path: "login",
                 element: <LoginComponent />,

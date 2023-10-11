@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useSelector } from "react-redux";
 import axios from "../axios-config"; // Import your Axios instance
 import { useNavigate, Navigate } from "react-router-dom"; // Import useNavigate for navigation
@@ -6,22 +6,13 @@ import { useNavigate, Navigate } from "react-router-dom"; // Import useNavigate 
 const UserPlaylistsCards = ({ playlistInfo }) => {
     const userId = useSelector((store) => store.authentication.userId);
     const navigate = useNavigate();
-    const addToLearning = async () => {
-        try {
-            const payload = {
-                playlistId: playlistInfo.playlistId, // Replace with the actual playlistId
-            };
-
-            // Make the POST request
-            await axios.post(`/users/${userId}/trackPlaylists`, payload);
-
-            // Navigate to the "/" page after successfully adding the playlist
-            navigate("/");
-        } catch (error) {
-            // Handle errors (e.g., display an error message)
-            console.error("Error adding playlist to learning:", error);
-        }
+   
+     const navigateToPlaylist = () => {
+        navigate(`/playlist/${playlistInfo.playlistId}`);
     };
+   
+ 
+   
 
     return (
         <div className="relative p-2 m-2 w-72 h-72 shadow-lg overflow-hidden">
@@ -38,10 +29,10 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
                         </li>
                     </ul>
                     <button
-                        // onClick={addToLearning} // Call the addToLearning function on button click
+                        onClick={navigateToPlaylist}
                         className="bg-blue-300 text-black font-bold rounded-md py-2 px-4 mt-2 relative z-10"
                     >
-                    Continue Learning
+                        Continue Learning
                     </button>
                 </div>
             </div>

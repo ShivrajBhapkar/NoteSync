@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../axios-config";
-import UserLearningCards from "./UserLearningCards"
+import UserLearningCards from "./UserLearningCards";
 import { useSelector } from "react-redux";
 const UserUnTrackPlayList = () => {
     const [playlists, setPlaylists] = useState([]);
@@ -10,11 +10,10 @@ const UserUnTrackPlayList = () => {
         getVideos();
     }, []);
     const userId = useSelector((store) => store.authentication.userId);
+    
     const getVideos = async () => {
         try {
-            const response = await axios.get(
-                `/users/${userId}/trackPlaylists`
-            );
+            const response = await axios.get(`/users/${userId}/trackPlaylists`);
 
             if (response.status === 200) {
                 const data = response.data;
