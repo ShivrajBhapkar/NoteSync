@@ -3,6 +3,7 @@ import { createBrowserRouter, Navigate } from "react-router-dom";
 import Body from "./components/Body";
 import MaineContainer from "./components/MaineContainer";
 import WatchPage from "./components/WatchPage";
+import NoteTakingApp from "./components/NoteTakingApp ";
 import Demo from "./components/Demo";
 import UserUnTrackPlayList from "./components/UserUnTrackPlayList";
 import UserTrackPlayList from "./components/UserTrackPlayLists";
@@ -31,8 +32,8 @@ const appRouter = createBrowserRouter([
                 element: <MaineContainer />,
             },
             {
-                path: "watch",
-                element: <ProtectedRoute element={<WatchPage />} />,
+                path: "watch/:playlistId/:videoId",
+                element: <ProtectedRoute element={<NoteTakingApp />} />,
             },
             {
                 path: "demo",
@@ -48,7 +49,7 @@ const appRouter = createBrowserRouter([
             },
             {
                 path: "/playlist/:playlistId",
-                element:<ProtectedRoute element={<PlaylistVideos/>}/>
+                element: <ProtectedRoute element={<PlaylistVideos />} />,
             },
 
             {

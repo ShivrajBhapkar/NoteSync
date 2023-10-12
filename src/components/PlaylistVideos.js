@@ -61,7 +61,10 @@ const PlaylistVideos = () => {
                 <h2 className="text-2xl font-semibold">Videos</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                     {videos.map((video, index) => (
-                        <Link key={video.id} to={"/watch?v=" + video.videoId}>
+                        <Link
+                            key={video.videoId}
+                            to={`/watch/${playlistId}/${video.videoId}`}
+                        >
                             <div
                                 className="bg-white rounded-lg p-2"
                                 key={video.videoId}
