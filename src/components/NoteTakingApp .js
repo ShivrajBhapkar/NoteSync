@@ -1,4 +1,4 @@
-import React, { useState , useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import YouTube from "react-youtube";
 import axios from "../axios-config";
 import { useSelector } from "react-redux";
@@ -15,18 +15,17 @@ function formatTime(timeInSeconds) {
     }
 }
 
-
 const NoteTakingApp = () => {
     const [player, setPlayer] = useState(null);
     const [noteText, setNoteText] = useState("");
     const [notes, setNotes] = useState([]);
-     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-     const [selectedNoteId, setSelectedNoteId] = useState("");
-     const [editedNoteText, setEditedNoteText] = useState("");
-     const [editedNoteTimestamp, setEditedNoteTimestamp] = useState("");
-   const userId = useSelector((store) => store.authentication.userId);
+    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+    const [selectedNoteId, setSelectedNoteId] = useState("");
+    const [editedNoteText, setEditedNoteText] = useState("");
+    const [editedNoteTimestamp, setEditedNoteTimestamp] = useState("");
+    const userId = useSelector((store) => store.authentication.userId);
     const { playlistId } = useParams();
-     const { videoId } = useParams();
+    const { videoId } = useParams();
     console.log(playlistId);
     console.log(videoId);
     const onReady = (event) => {
@@ -38,69 +37,70 @@ const NoteTakingApp = () => {
         setEditedNoteTimestamp(initialTimestamp); // Set initial timestamp
         setIsEditModalOpen(true);
     };
-const updateNoteTextAndTimestamp = (noteId, newText, newTimestamp) => {
-    // Construct the PUT request URL
-    const apiUrl = `/users/${userId}/notes/${noteId}`;
-   const updatedNote = {
-       timestamp: newTimestamp,
-       text: newText,
-   };
-    // Use Axios to make the PUT request to update the note
-    axios
-        .put(apiUrl, updatedNote)
-        .then((response) => {
-            // Handle a successful response here
-            console.log("Note updated successfully.");
-            // Optionally, you can update the local state with the updated note.
-            // Find the index of the note to update in the local state.
-            const noteIndex = notes.findIndex((note) => note._id === noteId);
-            if (noteIndex !== -1) {
-                // Create a copy of the notes array to avoid mutating state directly
-                const updatedNotes = [...notes];
-                // Replace the old note with the updated note
-                updatedNotes[noteIndex] = {
-                    ...updatedNotes[noteIndex],
-                    ...updatedNote,
-                };
-                setNotes(updatedNotes);
-            }
-        })
-        .catch((error) => {
-            // Handle errors here
-            console.error("Failed to update note:", error);
-        });
-};
+    const updateNoteTextAndTimestamp = (noteId, newText, newTimestamp) => {
+        // Construct the PUT request URL
+        const apiUrl = `/users/${userId}/notes/${noteId}`;
+        const updatedNote = {
+            timestamp: newTimestamp,
+            text: newText,
+        };
+        // Use Axios to make the PUT request to update the note
+        axios
+            .put(apiUrl, updatedNote)
+            .then((response) => {
+                // Handle a successful response here
+                console.log("Note updated successfully.");
+                // Optionally, you can update the local state with the updated note.
+                // Find the index of the note to update in the local state.
+                const noteIndex = notes.findIndex(
+                    (note) => note._id === noteId
+                );
+                if (noteIndex !== -1) {
+                    // Create a copy of the notes array to avoid mutating state directly
+                    const updatedNotes = [...notes];
+                    // Replace the old note with the updated note
+                    updatedNotes[noteIndex] = {
+                        ...updatedNotes[noteIndex],
+                        ...updatedNote,
+                    };
+                    setNotes(updatedNotes);
+                }
+            })
+            .catch((error) => {
+                // Handle errors here
+                console.error("Failed to update note:", error);
+            });
+    };
 
-const fetchNotes = () => {
-    // Construct the GET request URL
-    const apiUrl = `/users/${userId}/playlist/${playlistId}/videos/${videoId}/notes`;
+    const fetchNotes = () => {
+        // Construct the GET request URL
+        const apiUrl = `/users/${userId}/playlist/${playlistId}/videos/${videoId}/notes`;
 
-    // Use Axios to make the GET request to fetch notes
-    axios
-        .get(apiUrl)
-        .then((response) => {
-            // Handle the response data (notes) here
-            const fetchedNotes = response.data; // Assuming the response contains an array of notes
-            setNotes(fetchedNotes);
-        })
-        .catch((error) => {
-            // Handle errors here
-            console.error("Failed to fetch notes:", error);
-        });
-};
+        // Use Axios to make the GET request to fetch notes
+        axios
+            .get(apiUrl)
+            .then((response) => {
+                // Handle the response data (notes) here
+                const fetchedNotes = response.data; // Assuming the response contains an array of notes
+                setNotes(fetchedNotes);
+            })
+            .catch((error) => {
+                // Handle errors here
+                console.error("Failed to fetch notes:", error);
+            });
+    };
 
-// Use useEffect to fetch notes when the component mounts or when the videoId changes
-useEffect(() => {
-    fetchNotes();
-}, [videoId]);
+    // Use useEffect to fetch notes when the component mounts or when the videoId changes
+    useEffect(() => {
+        fetchNotes();
+    }, [videoId]);
     const addNote = () => {
         if (player) {
             const currentTime = player.getCurrentTime();
             const isoTimestamp = new Date(currentTime * 1000).toISOString();
             const newNote = { timestamp: isoTimestamp, text: noteText };
-            setNotes([...notes, newNote]);
-            setNoteText("");
-           // Replace with the actual user ID
+
+            // Replace with the actual user ID
             const apiUrl = `/users/${userId}/playlist/${playlistId}/videos/${videoId}/notes`;
 
             // Use Axios to make the POST request
@@ -108,6 +108,8 @@ useEffect(() => {
                 .post(apiUrl, newNote)
                 .then((response) => {
                     // Handle a successful response here
+                    setNotes([...notes, newNote]);
+                    setNoteText("");
                     console.log("Note added successfully.");
                 })
                 .catch((error) => {
@@ -143,11 +145,9 @@ useEffect(() => {
                 <ul>
                     {notes.map((note, index) => (
                         <li key={index}>
-                            <strong>
-                                Time: {formatTime(new Date(note.timestamp))}
-                            </strong>
+                            <strong>Time: {formatTime(note.timestamp)}</strong>
                             <p>{note.text}</p>
-                            <button
+                            {/* <button
                                 onClick={() =>
                                     handleEditNoteClick(
                                         note._id,
@@ -157,12 +157,12 @@ useEffect(() => {
                                 }
                             >
                                 Edit
-                            </button>
+                            </button> */}
                         </li>
                     ))}
                 </ul>
             </div>
-            <EditNoteModal
+            {/* <EditNoteModal
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 initialText={editedNoteText}
@@ -174,7 +174,7 @@ useEffect(() => {
                         newTimestamp
                     );
                 }}
-            />
+            /> */}
         </div>
     );
 };
