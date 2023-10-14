@@ -1,9 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import YouTube from "react-youtube";
 import axios from "../axios-config";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import EditNoteModal from "./EditNoteModal";
+import DeleteConfirmationModal from "./DeleteConfirmationModal";
 function formatTime(timeInSeconds) {
     if (timeInSeconds) {
         const timestampDate = new Date(timeInSeconds);
@@ -17,20 +18,55 @@ function formatTime(timeInSeconds) {
 
 const NoteTakingApp = () => {
     const [player, setPlayer] = useState(null);
+    const [isPlayerReady, setIsPlayerReady] = useState(false);
     const [noteText, setNoteText] = useState("");
     const [notes, setNotes] = useState([]);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedNoteId, setSelectedNoteId] = useState("");
     const [editedNoteText, setEditedNoteText] = useState("");
     const [editedNoteTimestamp, setEditedNoteTimestamp] = useState("");
+    const [currentVideoTime, setCurrentVideoTime] = useState(0);
     const userId = useSelector((store) => store.authentication.userId);
     const { playlistId } = useParams();
     const { videoId } = useParams();
-    console.log(playlistId);
-    console.log(videoId);
-    const onReady = (event) => {
-        setPlayer(event.target);
-    };
+     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+         useState(false);
+     const [noteToDeleteId, setNoteToDeleteId] = useState("");
+
+     const openDeleteConfirmationModal = (noteId) => {
+         setNoteToDeleteId(noteId);
+         setIsDeleteConfirmationOpen(true);
+     };
+
+     const closeDeleteConfirmationModal = () => {
+         setIsDeleteConfirmationOpen(false);
+     };
+
+     const deleteNote = () => {
+         // Construct the DELETE request URL
+         const apiUrl = `/users/${userId}/notes/${noteToDeleteId}`;
+
+         // Use Axios to make the DELETE request to delete the note
+         axios
+             .delete(apiUrl)
+             .then((response) => {
+                 // Handle a successful response here
+                 console.log("Note deleted successfully.");
+                 // Optionally, you can update the local state to remove the deleted note.
+                 setNotes(notes.filter((note) => note._id !== noteToDeleteId));
+                 closeDeleteConfirmationModal(); // Close the delete confirmation modal
+             })
+             .catch((error) => {
+                 // Handle errors here
+                 console.error("Failed to delete note:", error);
+             });
+     };
+  const onReady = (event) => {
+      setPlayer(event.target);
+      setIsPlayerReady(true);
+  };
+
+    
     const handleEditNoteClick = (noteId, initialText, initialTimestamp) => {
         setSelectedNoteId(noteId);
         setEditedNoteText(initialText);
@@ -118,7 +154,15 @@ const NoteTakingApp = () => {
                 });
         }
     };
+    
 
+   
+ const compareNotesByTimestamp = (noteA, noteB) => {
+     const timestampA = new Date(noteA.timestamp);
+     const timestampB = new Date(noteB.timestamp);
+     return timestampA - timestampB;
+ };
+const sortedNotes = [...notes].sort(compareNotesByTimestamp);
     return (
         <div className="w-full h-96 flex">
             <div className="flex-[60%]">
@@ -143,11 +187,11 @@ const NoteTakingApp = () => {
             <div className="flex-[40%]">
                 <h2>Notes:</h2>
                 <ul>
-                    {notes.map((note, index) => (
-                        <li key={index}>
+                    {sortedNotes.map((note, index) => (
+                        <li>
                             <strong>Time: {formatTime(note.timestamp)}</strong>
                             <p>{note.text}</p>
-                            {/* <button
+                            <button
                                 onClick={() =>
                                     handleEditNoteClick(
                                         note._id,
@@ -155,14 +199,23 @@ const NoteTakingApp = () => {
                                         note.timestamp
                                     )
                                 }
+                                className="bg-blue-500 text-white px-2 py-1 rounded-lg m-1"
                             >
                                 Edit
-                            </button> */}
+                            </button>
+                            <button
+                                onClick={() =>
+                                    openDeleteConfirmationModal(note._id)
+                                }
+                                className="bg-red-500 text-white px-2 py-1 rounded-lg m-1"
+                            >
+                                Delete
+                            </button>
                         </li>
                     ))}
                 </ul>
             </div>
-            {/* <EditNoteModal
+            <EditNoteModal
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 initialText={editedNoteText}
@@ -174,7 +227,12 @@ const NoteTakingApp = () => {
                         newTimestamp
                     );
                 }}
-            /> */}
+            />
+            <DeleteConfirmationModal
+                isOpen={isDeleteConfirmationOpen}
+                onClose={closeDeleteConfirmationModal}
+                onConfirm={deleteNote}
+            />
         </div>
     );
 };

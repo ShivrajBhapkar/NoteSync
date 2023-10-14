@@ -12,18 +12,17 @@ const EditNoteModal = ({
         onSave(text, initialTimestamp); // Pass both text and timestamp to the onSave function
         onClose();
     };
-
+console.log("intial text" , initialText)
     return (
         isOpen && (
             <div className="modal">
                 <div className="modal-content">
                     <h2>Edit Note</h2>
                     <textarea
-                        value={text}
-                    defaultValue={initialText}
+                        defaultValue={initialText}
                         onChange={(e) => setText(e.target.value)}
                     />
-                   
+
                     <button onClick={handleSave}>Save</button>
                     <button onClick={onClose}>Cancel</button>
                 </div>

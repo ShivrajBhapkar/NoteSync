@@ -1,11 +1,8 @@
-
 import axios from "axios";
 
 const instance = axios.create({
     baseURL: "http://localhost:3000/v1", // Your API base URL
 });
-
-
 
 const refreshToken = async () => {
     try {
@@ -16,6 +13,11 @@ const refreshToken = async () => {
             "http://localhost:3000/v1/auth/refresh-tokens",
             {
                 refreshToken: refreshToken,
+            },
+            {
+                headers: {
+                    Authorization: JSON.parse(localStorage.getItem("User")).accessToken,
+                },
             }
         );
 
@@ -36,7 +38,7 @@ const refreshToken = async () => {
             ] = `Bearer ${newAccessToken}`;
 
             // Retry the original request that triggered the token expiration
-              return instance.request(response.config);
+            return instance.request(response.config);
         }
     } catch (refreshError) {
         console.error("Error refreshing access token:", refreshError);
