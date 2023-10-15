@@ -40,45 +40,49 @@ const PlaylistVideos = () => {
     if (error) {
         return <div>{error}</div>;
     }
-    console.log("videos" , videos)
+    console.log("videos", videos);
 
     // Once both API requests complete, or in the initial state, the UI will be rendered
     return (
-        <div className="flex p-4">
-            <div className="w-1/3 p-4">
-                <img
-                    src={playlistData.playlistImageURL}
-                    alt={playlistData.playlistTitle}
-                    className="w-full rounded-lg"
-                />
-                <h1 className="text-xl font-semibold mt-4">
-                    {playlistData.playlistTitle}
-                </h1>
-                <p className="text-gray-600">{playlistData.playlistDesc}</p>
+        <div className="flex p-4 h-full ">
+            <div className="w-[35%] overflow-y-auto h-screen">
+                <div className="w-full p-4 shadow-lg bg-gradient-to-br from-blue-200 to-blue-400 rounded-lg overflow-x-auto">
+                    <img
+                        src={playlistData.playlistImageURL}
+                        alt={playlistData.playlistTitle}
+                        className="w-full rounded-lg"
+                    />
+                    <h1 className="text-2xl font-semibold mt-4">
+                        {playlistData.playlistTitle}
+                    </h1>
+                    <p className="text-gray-600 mt-2">
+                        {playlistData.playlistDesc}
+                    </p>
+                </div>
             </div>
 
-            <div className="w-2/3 p-4">
+            <div className="w-2/3 p-4 overflow-y-auto h-screen space-y-2 ">
                 <h2 className="text-2xl font-semibold">Videos</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mt-4">
                     {videos.map((video, index) => (
-                        <Link
-                            key={video.videoId}
-                            to={`/watch/${playlistId}/${video.videoId}`}
-                        >
-                            <div
-                                className="bg-white rounded-lg p-2"
+                        <div className="border-solid border-2 border-grey-200">
+                            <Link
+                                to={`/watch/${playlistId}/${video.videoId}`}
                                 key={video.videoId}
                             >
-                                <img
-                                    src={video.videoImageURL}
-                                    alt={video.videoTitle}
-                                    className="w-full h-40 object-cover rounded-lg"
-                                />
-                                <p className="text-md font-medium mt-2">
-                                    {video.videoTitle}
-                                </p>
-                            </div>
-                        </Link>
+                                <div className="bg-white rounded-lg p-2 shadow-md">
+                                    <img
+                                        src={video.videoImageURL}
+                                        alt={video.videoTitle}
+                                        className="w-full h-40 object-cover rounded-lg"
+                                    />
+                                    <p className="text-lg font-semibold mt-2 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                                        {video.videoTitle}
+                                    </p>
+                                </div>
+                            </Link>
+                        </div>
                     ))}
                 </div>
             </div>

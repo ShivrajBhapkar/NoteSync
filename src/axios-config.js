@@ -2,6 +2,9 @@ import axios from "axios";
 
 const instance = axios.create({
     baseURL: "http://localhost:3000/v1", // Your API base URL
+    headers: {
+        "Content-Type": "application/json",
+    },
 });
 
 const refreshToken = async () => {
@@ -9,6 +12,7 @@ const refreshToken = async () => {
         const refreshToken = JSON.parse(
             localStorage.getItem("User")
         ).refreshToken;
+    const user = JSON.parse(localStorage.getItem("User"));
         const response = await axios.post(
             "http://localhost:3000/v1/auth/refresh-tokens",
             {
@@ -16,7 +20,7 @@ const refreshToken = async () => {
             },
             {
                 headers: {
-                    Authorization: JSON.parse(localStorage.getItem("User")).accessToken,
+                    Authorization: `Bearer ${user.accessToken}`,
                 },
             }
         );
@@ -38,7 +42,7 @@ const refreshToken = async () => {
             ] = `Bearer ${newAccessToken}`;
 
             // Retry the original request that triggered the token expiration
-            return instance.request(response.config);
+            return instance(response.config);
         }
     } catch (refreshError) {
         console.error("Error refreshing access token:", refreshError);
@@ -48,7 +52,7 @@ instance.interceptors.request.use(
     (config) => {
         const user = JSON.parse(localStorage.getItem("User"));
         if (user && user.accessToken) {
-            config.headers.Authorization = `Bearer ${user.accessToken}`;
+             config.headers.Authorization = `Bearer ${user.accessToken}`;
         }
         return config;
     },
@@ -63,22 +67,24 @@ instance.interceptors.response.use(
         return response;
     },
     async (error) => {
-        if (error.response && error.response.status === 401) {
-            // Handle token expiration here
-            // Attempt to refresh the access token
-            try {
-                const originalRequest = error.config;
+        const originalConfig = error.config;
+        if (originalConfig.url !== "/auth/login" && error.response) {
+            if (error.response.status === 401 && !originalConfig._retry) {
+                // Handle token expiration here
+                // Attempt to refresh the access token
+                originalConfig._retry = true;
+                try {
+                    // Make sure this is the first request to handle token expiration
 
-                // Make sure this is the first request to handle token expiration
-                if (!originalRequest._retry) {
-                    originalRequest._retry = true;
                     const refreshedResponse = await refreshToken();
-                    return refreshedResponse;
+                    // return axiosInstance(originalConfig);
+              
+                } catch (refreshError) {
+                    console.error("Error handling token expiration:", refreshError);
                 }
-            } catch (refreshError) {
-                console.error("Error handling token expiration:", refreshError);
             }
         }
+        
         return Promise.reject(error);
     }
 );

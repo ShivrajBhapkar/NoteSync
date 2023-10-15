@@ -10,7 +10,7 @@ const UserUnTrackPlayList = () => {
         getVideos();
     }, []);
     const userId = useSelector((store) => store.authentication.userId);
-    
+
     const getVideos = async () => {
         try {
             const response = await axios.get(`/users/${userId}/trackPlaylists`);
@@ -27,9 +27,12 @@ const UserUnTrackPlayList = () => {
     };
     console.log(playlists);
     return (
-        <div className="flex flex-wrap">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
             {playlists.map((playlist) => (
-                <Link key={playlist.playlistId}>
+                <Link
+                    to={`/playlist/${playlist.playlistId}`}
+                    key={playlist.playlistId}
+                >
                     <UserLearningCards playlistInfo={playlist} />
                 </Link>
             ))}
