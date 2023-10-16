@@ -46,7 +46,7 @@ const PlaylistVideos = () => {
     return (
         <div className="flex p-4 h-full ">
             <div className="w-[35%] overflow-y-auto h-screen">
-                <div className="w-full p-4 shadow-lg bg-gradient-to-br from-blue-200 to-blue-400 rounded-lg overflow-x-auto">
+                <div className="w-full p-4 shadow-lg bg-gradient-to-br from-blue-200 to-blue-400 rounded-lg overflow-x-auto h-[100%]">
                     <img
                         src={playlistData.playlistImageURL}
                         alt={playlistData.playlistTitle}
@@ -66,7 +66,7 @@ const PlaylistVideos = () => {
 
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 mt-4">
                     {videos.map((video, index) => (
-                        <div className="border-solid border-2 border-grey-200">
+                        <div className="border-solid border-2 border-grey-200" key={video.videoId}>
                             <Link
                                 to={`/watch/${playlistId}/${video.videoId}`}
                                 key={video.videoId}
@@ -77,7 +77,7 @@ const PlaylistVideos = () => {
                                         alt={video.videoTitle}
                                         className="w-full h-40 object-cover rounded-lg"
                                     />
-                                    <p className="text-lg font-semibold mt-2 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                                    <p className="text-sm font-semibold mt-2 overflow-hidden overflow-ellipsis whitespace-nowrap">
                                         {video.videoTitle}
                                     </p>
                                 </div>

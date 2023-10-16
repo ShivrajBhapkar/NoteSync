@@ -18,6 +18,8 @@ function formatTime(timeInSeconds) {
 
 const NoteTakingApp = () => {
     const [player, setPlayer] = useState(null);
+    const [dataIsReady, setDataIsReady] = useState(false);
+    const [videoInfo, setVideoInfo] = useState([]);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
     const [noteText, setNoteText] = useState("");
     const [notes, setNotes] = useState([]);
@@ -41,7 +43,23 @@ const NoteTakingApp = () => {
      const closeDeleteConfirmationModal = () => {
          setIsDeleteConfirmationOpen(false);
      };
+const fetchVideoInfo = () => {
+    const apiUrl = `/users/playlist/${playlistId}/video/${videoId}`;
 
+    axios
+        .get(apiUrl)
+        .then((response) => {
+            // Handle the response data (video information) here
+            const videoInfo = response.data; // Assuming the response contains the video details
+            setVideoInfo(videoInfo);
+            console.log("Video information fetched:", videoInfo);
+            // You can update the component's state with the video information if needed.
+        })
+        .catch((error) => {
+            // Handle errors here
+            console.error("Failed to fetch video information:", error);
+        });
+};
      const deleteNote = () => {
          // Construct the DELETE request URL
          const apiUrl = `/users/${userId}/notes/${noteToDeleteId}`;
@@ -127,9 +145,24 @@ const NoteTakingApp = () => {
     };
 
     // Use useEffect to fetch notes when the component mounts or when the videoId changes
-    useEffect(() => {
-        fetchNotes();
-    }, [videoId]);
+  useEffect(() => {
+      // Create two promises for the API calls
+      const fetchNotesPromise = fetchNotes();
+      const fetchVideoInfoPromise = fetchVideoInfo();
+
+      // Use Promise.all to wait for both promises to resolve
+      Promise.all([fetchNotesPromise, fetchVideoInfoPromise])
+          .then(() => {
+              // Both API calls were successful
+              // Set the data readiness flag to true
+              setDataIsReady(true);
+          })
+          .catch((error) => {
+              // Handle errors here if needed
+              console.error("API calls failed:", error);
+          });
+  }, [videoId]);
+
     const addNote = () => {
         if (player) {
             const currentTime = player.getCurrentTime();
@@ -156,14 +189,15 @@ const NoteTakingApp = () => {
     };
     
 
-   
+    
  const compareNotesByTimestamp = (noteA, noteB) => {
      const timestampA = new Date(noteA.timestamp);
      const timestampB = new Date(noteB.timestamp);
      return timestampA - timestampB;
- };
+    };
+    console.log("VideoTitle" , videoInfo.videoTitle)
 const sortedNotes = [...notes].sort(compareNotesByTimestamp);
-    return (
+    return dataIsReady ? (
         <div className="w-full h-96 flex">
             <div className="flex-[60%]">
                 <YouTube
@@ -185,6 +219,15 @@ const sortedNotes = [...notes].sort(compareNotesByTimestamp);
                 </div>
             </div>
             <div className="flex-[40%]">
+                <div className="bg-gray-100 p-4 rounded-lg">
+                    <h3 className="text-lg font-semibold">
+                        {videoInfo.videoTitle}
+                    </h3>
+                    <p className="text-sm text-gray-600">
+                        {videoInfo.videoDescription}
+                    </p>
+                    <p className="text-sm text-gray-600">{`Channel: ${videoInfo.channelTitle}`}</p>
+                </div>
                 <h2>Notes:</h2>
                 <ul>
                     {sortedNotes.map((note, index) => (
@@ -219,7 +262,7 @@ const sortedNotes = [...notes].sort(compareNotesByTimestamp);
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 initialText={editedNoteText}
-                initialTimestamp={editedNoteTimestamp} // Pass the initial timestamp to the modal
+                initialTimestamp={editedNoteTimestamp}
                 onSave={(newText, newTimestamp) => {
                     updateNoteTextAndTimestamp(
                         selectedNoteId,
@@ -234,7 +277,11 @@ const sortedNotes = [...notes].sort(compareNotesByTimestamp);
                 onConfirm={deleteNote}
             />
         </div>
+    ) : (
+        <div>Loading data...</div>
     );
+
+  
 };
 
 export default NoteTakingApp;
