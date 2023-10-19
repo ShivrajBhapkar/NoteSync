@@ -4,11 +4,12 @@ import VideoContainer from './VideoContainer'
 
 const MaineContainer = () => {
   return (
-    <div >
-          <ButtonList />
-          <VideoContainer/>
-    </div>
-  )
+      <div className="mt-4">
+         
+              <VideoContainer />
+          
+      </div>
+  );
 }
 
 export default MaineContainer

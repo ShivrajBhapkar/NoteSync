@@ -16,9 +16,6 @@ const authenticationSlice = createSlice({
             state.accessToken = action.payload.accessToken;
             state.refreshToken = action.payload.refreshToken;
             state.userId = action.payload.userId;
-
-            // Store in local storage
-
             const userObject = {
                 accessToken: action.payload.accessToken,
                 refreshToken: action.payload.refreshToken,
@@ -31,8 +28,6 @@ const authenticationSlice = createSlice({
             state.accessToken = null;
             state.refreshToken = null;
             state.userId = null;
-
-            // Remove from local storage
             localStorage.removeItem("User");
         },
     },

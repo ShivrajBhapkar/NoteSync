@@ -1,4 +1,6 @@
 import axios from "axios";
+import { Navigate } from "react-router-dom";
+import LoginComponent from "./components/LoginComponent";
 
 const instance = axios.create({
     baseURL: "http://localhost:3000/v1", // Your API base URL
@@ -42,7 +44,7 @@ const refreshToken = async () => {
             ] = `Bearer ${newAccessToken}`;
 
             // Retry the original request that triggered the token expiration
-            return instance(response.config);
+            // return instance(response.config);
         }
     } catch (refreshError) {
         console.error("Error refreshing access token:", refreshError);
@@ -77,10 +79,12 @@ instance.interceptors.response.use(
                     // Make sure this is the first request to handle token expiration
 
                     const refreshedResponse = await refreshToken();
+                    return instance(originalConfig);
                     // return axiosInstance(originalConfig);
               
                 } catch (refreshError) {
                     console.error("Error handling token expiration:", refreshError);
+                    <Navigate to={<LoginComponent/>}/>
                 }
             }
         }

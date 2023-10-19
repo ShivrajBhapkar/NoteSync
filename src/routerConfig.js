@@ -18,7 +18,7 @@ const ProtectedRoute = ({ element, ...rest }) => {
         return element;
     } else {
         // Redirect unauthenticated users to the login page
-        return <Navigate to="/login" />;
+        return <Navigate to={ <LoginComponent/>} />;
     }
 };
 
@@ -29,7 +29,7 @@ const appRouter = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <MaineContainer />,
+                element: <UserTrackPlayList />,
             },
             {
                 path: "watch/:playlistId/:videoId",
@@ -43,21 +43,25 @@ const appRouter = createBrowserRouter([
                 path: "unTrack",
                 element: <ProtectedRoute element={<UserUnTrackPlayList />} />,
             },
-            {
-                path: "track",
-                element: <ProtectedRoute element={<UserTrackPlayList />} />,
-            },
+            // {
+            //     path: "track",
+            //     element: <ProtectedRoute element={<UserTrackPlayList />} />,
+            // },
             {
                 path: "/playlist/:playlistId",
                 element: <ProtectedRoute element={<PlaylistVideos />} />,
             },
 
-            {
-                path: "login",
-                element: <LoginComponent />,
-            },
+            // {
+            //     path: "login",
+            //     element: <LoginComponent />,
+            // },
         ],
     },
+    {
+        path: "/login",
+        element:<LoginComponent/>
+    }
 ]);
 
 export default appRouter;

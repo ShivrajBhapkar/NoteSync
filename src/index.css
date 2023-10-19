@@ -4,10 +4,10 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 .global-style {
-  font-family: Roboto, Arial, sans-serif;
+  font-family: inter, Arial, sans-serif;
 }
 
-code {
+/* code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
-}
+} */

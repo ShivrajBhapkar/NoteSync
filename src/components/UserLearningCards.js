@@ -34,7 +34,7 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
  
   
     return (
-        <div className="relative p-2 m-2 w-72 h-96 shadow-lg overflow-hidden">
+        <div className="relative p-2 m-2 w-72  shadow-lg overflow-hidden">
             <img
                 className="rounded-lg"
                 alt="thumbnail"

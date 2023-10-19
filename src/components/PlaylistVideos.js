@@ -44,7 +44,7 @@ const PlaylistVideos = () => {
 
     // Once both API requests complete, or in the initial state, the UI will be rendered
     return (
-        <div className="flex p-4 h-full ">
+        <div className="flex p-4 h-full">
             <div className="w-[35%] overflow-y-auto h-screen">
                 <div className="w-full p-4 shadow-lg bg-gradient-to-br from-blue-200 to-blue-400 rounded-lg overflow-x-auto h-[100%]">
                     <img
