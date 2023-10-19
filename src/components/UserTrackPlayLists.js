@@ -3,17 +3,21 @@ import { Link } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../axios-config";
 import UserLearningCards from "./UserLearningCards";
-import { useSelector } from "react-redux";
+import tokenService from "../Services/token.service";
 const UserUnTrackPlayList = () => {
     const [playlists, setPlaylists] = useState([]);
     useEffect(() => {
         getVideos();
     }, []);
-    const userId = useSelector((store) => store.authentication.userId);
+  
 
     const getVideos = async () => {
         try {
-            const response = await axios.get(`/users/${userId}/trackPlaylists`);
+            const {userId
+        } = tokenService.getUser();
+            const response = await axios.get(
+                `/users/${userId}/trackPlaylists`
+            );
 
             if (response.status === 200) {
                 const data = response.data;
