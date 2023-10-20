@@ -33,7 +33,7 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
               })
             
               // Navigate to the "/" page after successfully adding the playlist
-              navigate("/track");
+              navigate("/");
           } catch (error) {
               // Handle errors (e.g., display an error message)
               console.error("Error adding playlist to learning:", error);

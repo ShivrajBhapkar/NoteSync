@@ -5,7 +5,7 @@ import { login } from "../Services/auth";
 const LoginComponent = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const navigate = useNavigate(); // Use the useNavigate hook
+    const navigate = useNavigate(); 
     const userId = useSelector((store) => store.authentication.userId);
 
     if (userId !== null) {

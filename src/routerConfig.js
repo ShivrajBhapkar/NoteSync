@@ -10,17 +10,17 @@ import UserTrackPlayList from "./components/UserTrackPlayLists";
 import LoginComponent from "./components/LoginComponent";
 import PlaylistVideos from "./components/PlaylistVideos";
 import { useSelector } from "react-redux";
+import TokenService from "./Services/token.service";
 
-const ProtectedRoute = ({ element, ...rest }) => {
-    const userId = useSelector((store) => store.authentication.userId);
+  const ProtectedRoute = ({ element, ...rest }) => {
+      const user = TokenService.getUser();
+      if (user && user.userId) {
+          return element;
+      } else {
+          return <Navigate to="/login" />;
+      }
+  };
 
-    if (userId !== null) {
-        return element;
-    } else {
-        // Redirect unauthenticated users to the login page
-        return <Navigate to={ <LoginComponent/>} />;
-    }
-};
 
 const appRouter = createBrowserRouter([
     {
@@ -29,7 +29,7 @@ const appRouter = createBrowserRouter([
         children: [
             {
                 path: "/",
-                element: <UserTrackPlayList />,
+                element: <ProtectedRoute element={<UserTrackPlayList />} />,
             },
             {
                 path: "watch/:playlistId/:videoId",
@@ -43,25 +43,16 @@ const appRouter = createBrowserRouter([
                 path: "unTrack",
                 element: <ProtectedRoute element={<UserUnTrackPlayList />} />,
             },
-            // {
-            //     path: "track",
-            //     element: <ProtectedRoute element={<UserTrackPlayList />} />,
-            // },
             {
                 path: "/playlist/:playlistId",
                 element: <ProtectedRoute element={<PlaylistVideos />} />,
             },
-
-            // {
-            //     path: "login",
-            //     element: <LoginComponent />,
-            // },
         ],
     },
     {
         path: "/login",
-        element:<LoginComponent/>
-    }
+        element: <LoginComponent />,
+    },
 ]);
 
 export default appRouter;

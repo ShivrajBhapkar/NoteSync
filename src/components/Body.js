@@ -25,7 +25,6 @@ const Body = () => {
               <div className="bg-[#1c212c] text-white py-4 pl-5">
                   {/* Hamburger icon for small screens */}
                   <div className="flex items-center justify-end">
-                      
                       <button
                           onClick={handleSidebarToggle}
                           className="text-xl focus:outline-none mr-4  md:hidden lg:hidden xl:hidden"
@@ -35,7 +34,9 @@ const Body = () => {
                   </div>
               </div>
 
-              <div className="px-5 py-3"><Outlet/></div>
+              <div className="px-5 py-3">
+                  <Outlet />
+              </div>
           </div>
           <ToastContainer
               position="top-right"

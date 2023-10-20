@@ -6,8 +6,16 @@ import { useParams } from "react-router-dom";
 import EditNoteModal from "./EditNoteModal";
 import { BiSolidSend } from "react-icons/bi";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
+import tokenService from "../Services/token.service";
 import { BsCardText } from "react-icons/bs";
 import { BiEdit, BiTrash } from "react-icons/bi";
+import {
+    fetchVideoInfo,
+    fetchNotes,
+    deleteNote,
+    updateNote,
+    createNote,
+} from "../Services/noteServices";
 function formatTime(timeInSeconds) {
     if (timeInSeconds) {
         const timestampDate = new Date(timeInSeconds);
@@ -30,7 +38,7 @@ const NoteTakingApp = () => {
     const [selectedNoteId, setSelectedNoteId] = useState("");
     const [editedNoteText, setEditedNoteText] = useState("");
     const [editedNoteTimestamp, setEditedNoteTimestamp] = useState("");
-    const userId = useSelector((store) => store.authentication.userId);
+    const { userId } = tokenService.getUser();
     const { playlistId } = useParams();
     const { videoId } = useParams();
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
@@ -45,39 +53,25 @@ const NoteTakingApp = () => {
     const closeDeleteConfirmationModal = () => {
         setIsDeleteConfirmationOpen(false);
     };
-    const fetchVideoInfo = () => {
-        const apiUrl = `/users/playlist/${playlistId}/video/${videoId}`;
-
-        axios
-            .get(apiUrl)
-            .then((response) => {
-                // Handle the response data (video information) here
-                const videoInfo = response.data; // Assuming the response contains the video details
+    const fetchVideoInfoData = () => {
+        fetchVideoInfo(playlistId, videoId)
+            .then((videoInfo) => {
                 setVideoInfo(videoInfo);
-                console.log("Video information fetched:", videoInfo);
-                // You can update the component's state with the video information if needed.
             })
             .catch((error) => {
-                // Handle errors here
                 console.error("Failed to fetch video information:", error);
             });
     };
-    const deleteNote = () => {
-        // Construct the DELETE request URL
-        const apiUrl = `/users/${userId}/notes/${noteToDeleteId}`;
-
-        // Use Axios to make the DELETE request to delete the note
-        axios
-            .delete(apiUrl)
+    const deleteNoteData = () => {
+        deleteNote(userId, noteToDeleteId)
             .then((response) => {
-                // Handle a successful response here
-                console.log("Note deleted successfully.");
-                // Optionally, you can update the local state to remove the deleted note.
+                // Handle successful response
+                // Fetch updated notes here if needed
                 setNotes(notes.filter((note) => note._id !== noteToDeleteId));
-                closeDeleteConfirmationModal(); // Close the delete confirmation modal
+                closeDeleteConfirmationModal();
             })
             .catch((error) => {
-                // Handle errors here
+                // Optional: Handle or log the error
                 console.error("Failed to delete note:", error);
             });
     };
@@ -92,24 +86,19 @@ const NoteTakingApp = () => {
         setEditedNoteTimestamp(initialTimestamp); // Set initial timestamp
         setIsEditModalOpen(true);
     };
-    const updateNoteTextAndTimestamp = (noteId, newText, newTimestamp) => {
-        // Construct the PUT request URL
-        const apiUrl = `/users/${userId}/notes/${noteId}`;
+  
+    const updateNoteData = (noteId, newText, newTimestamp) => {
         const updatedNote = {
             timestamp: newTimestamp,
             text: newText,
         };
-        // Use Axios to make the PUT request to update the note
-        axios
-            .put(apiUrl, updatedNote)
+
+        updateNote(noteId,userId, updatedNote)
             .then((response) => {
-                // Handle a successful response here
-                console.log("Note updated successfully.");
-                // Optionally, you can update the local state with the updated note.
-                // Find the index of the note to update in the local state.
-                const noteIndex = notes.findIndex(
-                    (note) => note._id === noteId
-                );
+               
+                            const noteIndex = notes.findIndex(
+                                (note) => note._id === noteId
+                            );
                 if (noteIndex !== -1) {
                     // Create a copy of the notes array to avoid mutating state directly
                     const updatedNotes = [...notes];
@@ -120,27 +109,21 @@ const NoteTakingApp = () => {
                     };
                     setNotes(updatedNotes);
                 }
+                console.log("Note updated successfully.");
             })
             .catch((error) => {
-                // Handle errors here
+                // Optional: Handle or log the error
                 console.error("Failed to update note:", error);
             });
     };
-
-    const fetchNotes = () => {
-        // Construct the GET request URL
-        const apiUrl = `/users/${userId}/playlist/${playlistId}/videos/${videoId}/notes`;
-
-        // Use Axios to make the GET request to fetch notes
-        axios
-            .get(apiUrl)
-            .then((response) => {
-                // Handle the response data (notes) here
-                const fetchedNotes = response.data; // Assuming the response contains an array of notes
+    const fetchNotesData = () => {
+        fetchNotes(userId, playlistId, videoId)
+            .then((fetchedNotes) => {
+                // Handle successful response
                 setNotes(fetchedNotes);
             })
             .catch((error) => {
-                // Handle errors here
+                // Optional: Handle or log the error
                 console.error("Failed to fetch notes:", error);
             });
     };
@@ -148,8 +131,8 @@ const NoteTakingApp = () => {
     // Use useEffect to fetch notes when the component mounts or when the videoId changes
     useEffect(() => {
         // Create two promises for the API calls
-        const fetchNotesPromise = fetchNotes();
-        const fetchVideoInfoPromise = fetchVideoInfo();
+        const fetchNotesPromise = fetchNotesData();
+        const fetchVideoInfoPromise = fetchVideoInfoData();
 
         // Use Promise.all to wait for both promises to resolve
         Promise.all([fetchNotesPromise, fetchVideoInfoPromise])
@@ -164,27 +147,22 @@ const NoteTakingApp = () => {
             });
     }, [videoId]);
 
-    const addNote = (e) => {
+    const addNoteData = (e) => {
         e.preventDefault();
         if (player) {
             const currentTime = player.getCurrentTime();
             const isoTimestamp = new Date(currentTime * 1000).toISOString();
             const newNote = { timestamp: isoTimestamp, text: noteText };
-
-            // Replace with the actual user ID
-            const apiUrl = `/users/${userId}/playlist/${playlistId}/videos/${videoId}/notes`;
-
-            // Use Axios to make the POST request
-            axios
-                .post(apiUrl, newNote)
+            createNote(userId, playlistId, videoId, newNote)
                 .then((response) => {
-                    // Handle a successful response here
-                    setNotes([...notes, newNote]);
+                    // Handle successful response
+                    // Fetch updated notes here if needed
+                     setNotes([...notes, newNote]);
                     setNoteText("");
                     console.log("Note added successfully.");
                 })
                 .catch((error) => {
-                    // Handle errors here
+                    // Optional: Handle or log the error
                     console.error("Failed to add note:", error);
                 });
         }
@@ -198,19 +176,19 @@ const NoteTakingApp = () => {
     console.log("VideoTitle", videoInfo.videoTitle);
     const sortedNotes = [...notes].sort(compareNotesByTimestamp);
     return dataIsReady ? (
-        <div className=" h-full flex">
-            <div className="flex-[60%]  bg-gray-300">
+        <div className=" flex max-h-screen overflow-y-hidden">
+            <div className="flex-[60%] overflow-y-hidden">
                 <YouTube
                     videoId={videoId}
                     onReady={onReady}
                     opts={{
                         width: "100%",
-                        height: "500px",
+                        height: "400px",
                     }}
                 />
-                <div className=" w-full p-8 shadow-xl bg-gray-300 mt-3">
-                    <form onSubmit={addNote}>
-                        <div className="mb-6">
+                <div className=" w-full p-2 shadow-xl bg-gray-300">
+                    <form onSubmit={addNoteData}>
+                        <div className="mb-2">
                             <label
                                 htmlFor="postContent"
                                 className="block text-gray-700 text-sm font-bold mb-2"
@@ -238,7 +216,7 @@ const NoteTakingApp = () => {
                     </form>
                 </div>
             </div>
-            <div className="flex-[40%] bg-gray-200 overflow-y-auto h-screen p-2">
+            <div className="flex-[40%] bg-gray-200 overflow-y-auto max-h-screen h-screen  p-2">
                 <div className=" p-2 rounded-lg shadow-sm border-2 border-solid border-gray-300">
                     <h3 className="text-lg font-semibold">
                         {videoInfo.videoTitle}
@@ -248,50 +226,51 @@ const NoteTakingApp = () => {
                     </p>
                     <p className="text-sm text-gray-600">{`Channel: ${videoInfo.channelTitle}`}</p>
                 </div>
-
-                <h2 className="text-xl font-300 font-bold">Notes:</h2>
-                <ul className="flex flex-col pl-2">
-                    {sortedNotes.map((note, index) => (
-                        <li
-                            key={note._id}
-                            className="border rounded-lg p-4 mb-2 shadow-md border-gray-300"
-                        >
-                            <div className="flex items-center justify-between">
-                                <strong>
-                                    Time: {formatTime(note.timestamp)}
-                                </strong>
-                                <p>{note.text}</p>
-                                <div>
-                                    <button>
-                                        <BsCardText />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            handleEditNoteClick(
-                                                note._id,
-                                                note.text,
-                                                note.timestamp
-                                            )
-                                        }
-                                        className=" text-blue-500 px-2 py-1 rounded-lg ml-2"
-                                    >
-                                        <BiEdit />
-                                    </button>
-                                    <button
-                                        onClick={() =>
-                                            openDeleteConfirmationModal(
-                                                note._id
-                                            )
-                                        }
-                                        className=" text-red-500 px-2 py-1 rounded-lg ml-2"
-                                    >
-                                        <BiTrash />
-                                    </button>
+                <div className="h-screen">
+                    <h2 className="text-xl font-300 font-bold">Notes:</h2>
+                    <ul className="flex flex-col pl-2 max-h-screen">
+                        {sortedNotes.map((note, index) => (
+                            <li
+                                key={note._id}
+                                className="border rounded-lg p-4 mb-2 shadow-md border-gray-300"
+                            >
+                                <div className="flex items-center justify-between">
+                                    <strong>
+                                        Time: {formatTime(note.timestamp)}
+                                    </strong>
+                                    <p>{note.text}</p>
+                                    <div>
+                                        <button>
+                                            <BsCardText />
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                handleEditNoteClick(
+                                                    note._id,
+                                                    note.text,
+                                                    note.timestamp
+                                                )
+                                            }
+                                            className=" text-blue-500 px-2 py-1 rounded-lg ml-2"
+                                        >
+                                            <BiEdit />
+                                        </button>
+                                        <button
+                                            onClick={() =>
+                                                openDeleteConfirmationModal(
+                                                    note._id
+                                                )
+                                            }
+                                            className=" text-red-500 px-2 py-1 rounded-lg ml-2"
+                                        >
+                                            <BiTrash />
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
-                        </li>
-                    ))}
-                </ul>
+                            </li>
+                        ))}
+                    </ul>
+                </div>
             </div>
             <EditNoteModal
                 isOpen={isEditModalOpen}
@@ -299,17 +278,13 @@ const NoteTakingApp = () => {
                 initialText={editedNoteText}
                 initialTimestamp={editedNoteTimestamp}
                 onSave={(newText, newTimestamp) => {
-                    updateNoteTextAndTimestamp(
-                        selectedNoteId,
-                        newText,
-                        newTimestamp
-                    );
+                    updateNoteData(selectedNoteId, newText, newTimestamp);
                 }}
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteConfirmationOpen}
                 onClose={closeDeleteConfirmationModal}
-                onConfirm={deleteNote}
+                onConfirm={deleteNoteData}
             />
         </div>
     ) : (

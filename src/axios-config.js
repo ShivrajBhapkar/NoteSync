@@ -31,20 +31,13 @@ const refreshToken = async () => {
             const { access, refresh } = response.data;
             const newAccessToken = access.token;
             const newRefreshToken = refresh.token;
-
-            // Update the user object in local storage
             const existingUser = JSON.parse(localStorage.getItem("User"));
             existingUser.accessToken = newAccessToken;
             existingUser.refreshToken = newRefreshToken;
             localStorage.setItem("User", JSON.stringify(existingUser));
-
-            // Update the axios instance with the new access token
             instance.defaults.headers.common[
                 "Authorization"
             ] = `Bearer ${newAccessToken}`;
-
-            // Retry the original request that triggered the token expiration
-            // return instance(response.config);
         }
     } catch (refreshError) {
         console.error("Error refreshing access token:", refreshError);

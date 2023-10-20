@@ -25,8 +25,8 @@ const Sidebar = () => {
         navigate("/login")
     };
     return (
-        <aside className="shadow-lg  bg-[#1c212c]  min-h-screen flex flex-col  text-white  pt-5 border-collapse  space-y-7">
-            <div className="flex flex-col justify-between  h-screen">
+        <aside className="shadow-lg  bg-[#1c212c]  flex flex-col  text-white  pt-5 border-collapse h-screen  max-h-screen  space-y-7">
+            <div className="flex flex-col justify-between h-[100%]">
                 <div className="flex flex-col space-y-7 mt-6 flex-[60%] items-start justify-start ">
                     {links.map((link, index) => (
                         <NavLink key={index} to={link.href} className="w-full">

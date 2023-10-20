@@ -21,7 +21,6 @@ export const login = async (email, password) => {
                     refreshToken: refreshToken,
                     userId: userId,
                 };
-
                 TokenService.setUser(userObject);
                 
             } else {
