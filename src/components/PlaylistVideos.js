@@ -3,13 +3,14 @@ import axios from "../axios-config";
 import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import tokenService from "../Services/token.service";
 const PlaylistVideos = () => {
     const [playlistData, setPlaylistData] = useState({});
     const [videos, setVideos] = useState([]);
     const [error, setError] = useState(null); // New state for error handling
-    const userId = useSelector((store) => store.authentication.userId);
+    // const userId = useSelector((store) => store.authentication.userId);
     const { playlistId } = useParams();
-
+    const { userId } = tokenService.getUser();
     useEffect(() => {
         // First API call to fetch playlist info
         axios

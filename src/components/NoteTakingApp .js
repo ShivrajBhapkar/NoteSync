@@ -1,7 +1,12 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect} from "react";
 import YouTube from "react-youtube";
-import axios from "../axios-config";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import {
+    fetchNotesUtil,
+    createNoteUtil,
+    updateNoteUtil,
+    deleteNoteUtil,
+} from "../utils/noteSlice";
 import { useParams } from "react-router-dom";
 import EditNoteModal from "./EditNoteModal";
 import { BiSolidSend } from "react-icons/bi";
@@ -11,10 +16,6 @@ import { BsCardText } from "react-icons/bs";
 import { BiEdit, BiTrash } from "react-icons/bi";
 import {
     fetchVideoInfo,
-    fetchNotes,
-    deleteNote,
-    updateNote,
-    createNote,
 } from "../Services/noteServices";
 function formatTime(timeInSeconds) {
     if (timeInSeconds) {
@@ -33,7 +34,6 @@ const NoteTakingApp = () => {
     const [videoInfo, setVideoInfo] = useState([]);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
     const [noteText, setNoteText] = useState("");
-    const [notes, setNotes] = useState([]);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedNoteId, setSelectedNoteId] = useState("");
     const [editedNoteText, setEditedNoteText] = useState("");
@@ -41,6 +41,8 @@ const NoteTakingApp = () => {
     const { userId } = tokenService.getUser();
     const { playlistId } = useParams();
     const { videoId } = useParams();
+    const dispatch = useDispatch();
+    const notes = useSelector((state) => state.notes.data);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
         useState(false);
     const [noteToDeleteId, setNoteToDeleteId] = useState("");
@@ -62,73 +64,32 @@ const NoteTakingApp = () => {
                 console.error("Failed to fetch video information:", error);
             });
     };
+    const fetchNotesData = () => {
+        dispatch(fetchNotesUtil({ userId, playlistId, videoId }));
+    };
+     const updateNoteData = (noteId, newText, newTimestamp) => {
+         const updatedNote = {
+             timestamp: newTimestamp,
+             text: newText,
+         };
+         dispatch(updateNoteUtil({ noteId, userId, updatedNote }));
+     };
     const deleteNoteData = () => {
-        deleteNote(userId, noteToDeleteId)
-            .then((response) => {
-                // Handle successful response
-                // Fetch updated notes here if needed
-                setNotes(notes.filter((note) => note._id !== noteToDeleteId));
-                closeDeleteConfirmationModal();
-            })
-            .catch((error) => {
-                // Optional: Handle or log the error
-                console.error("Failed to delete note:", error);
-            });
+        dispatch(deleteNoteUtil({ userId, noteToDeleteId })).then(() => {
+               closeDeleteConfirmationModal();
+        });
     };
-    const onReady = (event) => {
-        setPlayer(event.target);
-        setIsPlayerReady(true);
-    };
-
+    
     const handleEditNoteClick = (noteId, initialText, initialTimestamp) => {
         setSelectedNoteId(noteId);
         setEditedNoteText(initialText);
         setEditedNoteTimestamp(initialTimestamp); // Set initial timestamp
         setIsEditModalOpen(true);
     };
-  
-    const updateNoteData = (noteId, newText, newTimestamp) => {
-        const updatedNote = {
-            timestamp: newTimestamp,
-            text: newText,
-        };
-
-        updateNote(noteId,userId, updatedNote)
-            .then((response) => {
-               
-                            const noteIndex = notes.findIndex(
-                                (note) => note._id === noteId
-                            );
-                if (noteIndex !== -1) {
-                    // Create a copy of the notes array to avoid mutating state directly
-                    const updatedNotes = [...notes];
-                    // Replace the old note with the updated note
-                    updatedNotes[noteIndex] = {
-                        ...updatedNotes[noteIndex],
-                        ...updatedNote,
-                    };
-                    setNotes(updatedNotes);
-                }
-                console.log("Note updated successfully.");
-            })
-            .catch((error) => {
-                // Optional: Handle or log the error
-                console.error("Failed to update note:", error);
-            });
-    };
-    const fetchNotesData = () => {
-        fetchNotes(userId, playlistId, videoId)
-            .then((fetchedNotes) => {
-                // Handle successful response
-                setNotes(fetchedNotes);
-            })
-            .catch((error) => {
-                // Optional: Handle or log the error
-                console.error("Failed to fetch notes:", error);
-            });
-    };
-
-    // Use useEffect to fetch notes when the component mounts or when the videoId changes
+    const onReady = (event) => {
+        setPlayer(event.target);
+        setIsPlayerReady(true);
+    };  
     useEffect(() => {
         // Create two promises for the API calls
         const fetchNotesPromise = fetchNotesData();
@@ -142,32 +103,23 @@ const NoteTakingApp = () => {
                 setDataIsReady(true);
             })
             .catch((error) => {
-                // Handle errors here if needed
+               
                 console.error("API calls failed:", error);
             });
     }, [videoId]);
 
-    const addNoteData = (e) => {
+    const addNoteData = async (e) => {
         e.preventDefault();
         if (player) {
             const currentTime = player.getCurrentTime();
             const isoTimestamp = new Date(currentTime * 1000).toISOString();
             const newNote = { timestamp: isoTimestamp, text: noteText };
-            createNote(userId, playlistId, videoId, newNote)
-                .then((response) => {
-                    // Handle successful response
-                    // Fetch updated notes here if needed
-                     setNotes([...notes, newNote]);
-                    setNoteText("");
-                    console.log("Note added successfully.");
-                })
-                .catch((error) => {
-                    // Optional: Handle or log the error
-                    console.error("Failed to add note:", error);
-                });
+            dispatch(createNoteUtil({ userId, playlistId, videoId, newNote })).then(() => {
+                 setNoteText(""); 
+            })
+            
         }
     };
-
     const compareNotesByTimestamp = (noteA, noteB) => {
         const timestampA = new Date(noteA.timestamp);
         const timestampB = new Date(noteB.timestamp);

@@ -12,7 +12,7 @@ export const fetchVideoInfo = async (playlistId, videoId) => {
     }
 };
 
-export const fetchNotes = async (userId, playlistId, videoId) => {
+export const fetchNotes = async ({ userId, playlistId, videoId } ) => {
     const apiUrl = `/users/${userId}/playlist/${playlistId}/videos/${videoId}/notes`;
     try {
         const response = await axios
@@ -23,17 +23,17 @@ export const fetchNotes = async (userId, playlistId, videoId) => {
     }
 };
 
-export const createNote = (userId, playlistId, videoId, newNote) => {
+export const createNote = ({ userId, playlistId, videoId, newNote }) => {
     const apiUrl = `/users/${userId}/playlist/${playlistId}/videos/${videoId}/notes`;
     return axios.post(apiUrl, newNote);
 };
 
-export const updateNote = ( noteId,userId, updatedNote) => {
+export const updateNote = ({ noteId, userId, updatedNote }) => {
     const apiUrl = `/users/${userId}/notes/${noteId}`;
     return axios.put(apiUrl, updatedNote);
 };
 
-export const deleteNote = (userId, noteId) => {
-    const apiUrl = `/users/${userId}/notes/${noteId}`;
+export const deleteNote = ({ userId, noteToDeleteId }) => {
+    const apiUrl = `/users/${userId}/notes/${noteToDeleteId}`;
     return axios.delete(apiUrl);
 };

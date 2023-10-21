@@ -13,8 +13,7 @@ const UserUnTrackPlayList = () => {
 
     const getVideos = async () => {
         try {
-            const {userId
-        } = tokenService.getUser();
+            const {userId} = tokenService.getUser();
             const response = await axios.get(
                 `/users/${userId}/trackPlaylists`
             );
