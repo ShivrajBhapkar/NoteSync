@@ -30,6 +30,7 @@ export const createNote = ({ userId, playlistId, videoId, newNote }) => {
 
 export const updateNote = ({ noteId, userId, updatedNote }) => {
     const apiUrl = `/users/${userId}/notes/${noteId}`;
+    console.log(updatedNote);
     return axios.put(apiUrl, updatedNote);
 };
 

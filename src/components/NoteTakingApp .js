@@ -1,4 +1,4 @@
-import React, { useState, useEffect} from "react";
+import React, { useState, useEffect } from "react";
 import YouTube from "react-youtube";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -14,9 +14,7 @@ import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import tokenService from "../Services/token.service";
 import { BsCardText } from "react-icons/bs";
 import { BiEdit, BiTrash } from "react-icons/bi";
-import {
-    fetchVideoInfo,
-} from "../Services/noteServices";
+import { fetchVideoInfo } from "../Services/noteServices";
 function formatTime(timeInSeconds) {
     if (timeInSeconds) {
         const timestampDate = new Date(timeInSeconds);
@@ -34,9 +32,12 @@ const NoteTakingApp = () => {
     const [videoInfo, setVideoInfo] = useState([]);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
     const [noteText, setNoteText] = useState("");
+    const [noteTitle, setNoteTitle] = useState("");
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [selectedNoteId, setSelectedNoteId] = useState("");
     const [editedNoteText, setEditedNoteText] = useState("");
+    const [editedNoteTitle, setEditedNoteTitle] = useState("");
+    const [searchQuery, setSearchQuery] = useState("");
     const [editedNoteTimestamp, setEditedNoteTimestamp] = useState("");
     const { userId } = tokenService.getUser();
     const { playlistId } = useParams();
@@ -67,29 +68,36 @@ const NoteTakingApp = () => {
     const fetchNotesData = () => {
         dispatch(fetchNotesUtil({ userId, playlistId, videoId }));
     };
-     const updateNoteData = (noteId, newText, newTimestamp) => {
-         const updatedNote = {
-             timestamp: newTimestamp,
-             text: newText,
-         };
-         dispatch(updateNoteUtil({ noteId, userId, updatedNote }));
-     };
+    const updateNoteData = (noteId, newTitle, newText, newTimestamp) => {
+        const updatedNote = {
+            title: newTitle,
+            timestamp: newTimestamp,
+            text: newText,
+        };
+        dispatch(updateNoteUtil({ noteId, userId, updatedNote }));
+    };
     const deleteNoteData = () => {
         dispatch(deleteNoteUtil({ userId, noteToDeleteId })).then(() => {
-               closeDeleteConfirmationModal();
+            closeDeleteConfirmationModal();
         });
     };
-    
-    const handleEditNoteClick = (noteId, initialText, initialTimestamp) => {
+
+    const handleEditNoteClick = (
+        noteId,
+        initialTitle,
+        initialText,
+        initialTimestamp
+    ) => {
         setSelectedNoteId(noteId);
         setEditedNoteText(initialText);
-        setEditedNoteTimestamp(initialTimestamp); // Set initial timestamp
+        setEditedNoteTitle(initialTitle);
+        setEditedNoteTimestamp(initialTimestamp);
         setIsEditModalOpen(true);
     };
     const onReady = (event) => {
         setPlayer(event.target);
         setIsPlayerReady(true);
-    };  
+    };
     useEffect(() => {
         // Create two promises for the API calls
         const fetchNotesPromise = fetchNotesData();
@@ -103,7 +111,6 @@ const NoteTakingApp = () => {
                 setDataIsReady(true);
             })
             .catch((error) => {
-               
                 console.error("API calls failed:", error);
             });
     }, [videoId]);
@@ -113,11 +120,17 @@ const NoteTakingApp = () => {
         if (player) {
             const currentTime = player.getCurrentTime();
             const isoTimestamp = new Date(currentTime * 1000).toISOString();
-            const newNote = { timestamp: isoTimestamp, text: noteText };
-            dispatch(createNoteUtil({ userId, playlistId, videoId, newNote })).then(() => {
-                 setNoteText(""); 
-            })
-            
+            const newNote = {
+                title: noteTitle,
+                timestamp: isoTimestamp,
+                text: noteText,
+            };
+            dispatch(
+                createNoteUtil({ userId, playlistId, videoId, newNote })
+            ).then(() => {
+                setNoteText("");
+                setNoteTitle("");
+            });
         }
     };
     const compareNotesByTimestamp = (noteA, noteB) => {
@@ -127,6 +140,15 @@ const NoteTakingApp = () => {
     };
     console.log("VideoTitle", videoInfo.videoTitle);
     const sortedNotes = [...notes].sort(compareNotesByTimestamp);
+  const filteredNotes = sortedNotes.filter((note) => {
+      if (note && note.title && note.text) {
+          return (
+              note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+              note.text.toLowerCase().includes(searchQuery.toLowerCase())
+          );
+      }
+      return false; // Exclude notes with missing or empty title/text properties.
+  });
     return dataIsReady ? (
         <div className=" flex max-h-screen overflow-y-hidden">
             <div className="flex-[60%] overflow-y-hidden">
@@ -147,6 +169,12 @@ const NoteTakingApp = () => {
                             >
                                 Note Content:
                             </label>
+                            <input
+                                value={noteTitle}
+                                onChange={(e) => setNoteTitle(e.target.value)}
+                                className=" max-w-md w-full border-grey shadow-md border-solid solid border-2 rounded-md px-4 py-2 leading-5  sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-200 mb-2"
+                                placeholder="Add your title here ..."
+                            ></input>
                             <textarea
                                 rows="4"
                                 value={noteText}
@@ -180,43 +208,75 @@ const NoteTakingApp = () => {
                 </div>
                 <div className="h-screen">
                     <h2 className="text-xl font-300 font-bold">Notes:</h2>
+                    <div className="relative text-gray-600 mb-4">
+                        <input
+                            type="text"
+                            placeholder="Search notes..."
+                            className="border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring focus:border-blue-500 w-full"
+                            onChange={(e) => setSearchQuery(e.target.value)}
+                        />
+                        <button className="absolute right-3 top-2 text-gray-400">
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                className="h-6 w-6"
+                                fill="none"
+                                viewBox="0 0 24 24"
+                                stroke="currentColor"
+                            >
+                                <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M14 14l5-5m0 0l-5-5m5 5H3"
+                                />
+                            </svg>
+                        </button>
+                    </div>
                     <ul className="flex flex-col pl-2 max-h-screen">
-                        {sortedNotes.map((note, index) => (
+                        {filteredNotes.map((note) => (
                             <li
                                 key={note._id}
                                 className="border rounded-lg p-4 mb-2 shadow-md border-gray-300"
                             >
-                                <div className="flex items-center justify-between">
-                                    <strong>
-                                        Time: {formatTime(note.timestamp)}
-                                    </strong>
-                                    <p>{note.text}</p>
-                                    <div>
-                                        <button>
-                                            <BsCardText />
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                handleEditNoteClick(
-                                                    note._id,
-                                                    note.text,
-                                                    note.timestamp
-                                                )
-                                            }
-                                            className=" text-blue-500 px-2 py-1 rounded-lg ml-2"
-                                        >
-                                            <BiEdit />
-                                        </button>
-                                        <button
-                                            onClick={() =>
-                                                openDeleteConfirmationModal(
-                                                    note._id
-                                                )
-                                            }
-                                            className=" text-red-500 px-2 py-1 rounded-lg ml-2"
-                                        >
-                                            <BiTrash />
-                                        </button>
+                                <div className="flex  flex-col justify-between gap-y-2">
+                                    <div className="text-center">
+                                        <p>{note.title}</p>
+                                    </div>
+                                    <div className="flex justify-between">
+                                        <strong>
+                                            Time: {formatTime(note.timestamp)}
+                                        </strong>
+
+                                        <p>{note?.text}</p>
+
+                                        <div>
+                                            <button>
+                                                <BsCardText />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    handleEditNoteClick(
+                                                        note._id,
+                                                        note.title,
+                                                        note.text,
+                                                        note.timestamp
+                                                    )
+                                                }
+                                                className=" text-blue-500 px-2 py-1 rounded-lg ml-2"
+                                            >
+                                                <BiEdit />
+                                            </button>
+                                            <button
+                                                onClick={() =>
+                                                    openDeleteConfirmationModal(
+                                                        note._id
+                                                    )
+                                                }
+                                                className=" text-red-500 px-2 py-1 rounded-lg ml-2"
+                                            >
+                                                <BiTrash />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </li>
@@ -228,9 +288,15 @@ const NoteTakingApp = () => {
                 isOpen={isEditModalOpen}
                 onClose={() => setIsEditModalOpen(false)}
                 initialText={editedNoteText}
+                initialTitle={editedNoteTitle}
                 initialTimestamp={editedNoteTimestamp}
-                onSave={(newText, newTimestamp) => {
-                    updateNoteData(selectedNoteId, newText, newTimestamp);
+                onSave={(newText, newTimestamp, newTitle) => {
+                    updateNoteData(
+                        selectedNoteId,
+                        newTitle,
+                        newText,
+                        newTimestamp
+                    );
                 }}
             />
             <DeleteConfirmationModal

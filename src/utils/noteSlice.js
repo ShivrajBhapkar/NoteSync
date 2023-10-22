@@ -19,7 +19,8 @@ export const fetchNotesUtil = createAsyncThunk(
 export const createNoteUtil = createAsyncThunk(
     "notes/createNote",
     async (params) => {
-       await createNote(params);
+        await createNote(params);
+        console.log(params.newNote);
         return params.newNote;
     }
 );
@@ -27,7 +28,8 @@ export const createNoteUtil = createAsyncThunk(
 export const updateNoteUtil = createAsyncThunk(
     "notes/updateNote",
     async (params) => {
-      await updateNote(params);
+        await updateNote(params);
+        console.log(params.updatedNote);
         return params;
     }
 );
@@ -68,8 +70,14 @@ const notesSlice = createSlice({
                 const noteIndex = state.data.findIndex(
                     (note) => note._id === action.payload.noteId
                 );
+                const newNote = {
+                    title: action.payload.updatedNote.title,
+                    text: action.payload.updatedNote.text,
+                    _id: action.payload.noteId,
+                    timestamp: action.payload.updatedNote.timestamp,
+                };
                 if (noteIndex !== -1) {
-                    state.data[noteIndex] = action.payload.updatedNote;
+                    state.data[noteIndex] = newNote;
                 }
             })
             .addCase(deleteNoteUtil.fulfilled, (state, action) => {
