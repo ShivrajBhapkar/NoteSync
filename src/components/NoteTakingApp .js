@@ -150,17 +150,17 @@ const NoteTakingApp = () => {
       return false; // Exclude notes with missing or empty title/text properties.
   });
     return dataIsReady ? (
-        <div className=" flex max-h-screen overflow-y-hidden">
-            <div className="flex-[60%] overflow-y-hidden">
+        <div className="flex max-h-screen">
+            <div className="flex-[60%] ">
                 <YouTube
                     videoId={videoId}
                     onReady={onReady}
                     opts={{
                         width: "100%",
-                        height: "400px",
+                        height: "450px",
                     }}
                 />
-                <div className=" w-full p-2 shadow-xl bg-gray-300">
+                <div className=" w-full p-2 shadow-lg">
                     <form onSubmit={addNoteData}>
                         <div className="mb-2">
                             <label
@@ -196,7 +196,7 @@ const NoteTakingApp = () => {
                     </form>
                 </div>
             </div>
-            <div className="flex-[40%] bg-gray-200 overflow-y-auto max-h-screen h-screen  p-2">
+            <div className="flex-[40%] max-h-screen h-screen overflow-y-auto pl-4 ">
                 <div className=" p-2 rounded-lg shadow-sm border-2 border-solid border-gray-300">
                     <h3 className="text-lg font-semibold">
                         {videoInfo.videoTitle}
@@ -206,7 +206,7 @@ const NoteTakingApp = () => {
                     </p>
                     <p className="text-sm text-gray-600">{`Channel: ${videoInfo.channelTitle}`}</p>
                 </div>
-                <div className="h-screen">
+                <div>
                     <h2 className="text-xl font-300 font-bold">Notes:</h2>
                     <div className="relative text-gray-600 mb-4">
                         <input
@@ -232,11 +232,11 @@ const NoteTakingApp = () => {
                             </svg>
                         </button>
                     </div>
-                    <ul className="flex flex-col pl-2 max-h-screen">
+                    <ul className="flex flex-col pl-2  overflow-y-auto">
                         {filteredNotes.map((note) => (
                             <li
                                 key={note._id}
-                                className="border rounded-lg p-4 mb-2 shadow-md border-gray-300"
+                                className="border rounded-lg p-4 mb-2 shadow-md  border-gray-300"
                             >
                                 <div className="flex  flex-col justify-between gap-y-2">
                                     <div className="text-center">
