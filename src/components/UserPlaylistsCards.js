@@ -27,12 +27,10 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
                   playlistId: playlistInfo.playlistId, // Replace with the actual playlistId
               };
 
-              // Make the POST request
+             
               await axios.post(`/users/${userId}/trackPlaylists`, payload).then(() => {
                     notifyme("Playlist added to learning successfully");
               })
-            
-              // Navigate to the "/" page after successfully adding the playlist
               navigate("/");
           } catch (error) {
               // Handle errors (e.g., display an error message)
