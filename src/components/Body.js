@@ -45,7 +45,7 @@ const Body = () => {
     return (
         <div className="flex h-screen">
             <div
-                className={`md:flex-[15%] h-[110%] ${
+                className={`md:flex-[15%] md:h-[100%] sm:h-[100%] lg:h-[110%] h-[110%] ${
                     showSidebar ? "block" : "hidden"
                 }`}
             >

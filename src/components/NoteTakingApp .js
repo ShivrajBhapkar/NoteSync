@@ -150,8 +150,8 @@ const NoteTakingApp = () => {
       return false; // Exclude notes with missing or empty title/text properties.
   });
     return dataIsReady ? (
-        <div className="flex max-h-screen">
-            <div className="flex-[60%] ">
+        <div className="flex max-h-screen flex-col  lg:flex-row xl:flex-row ">
+            <div className="flex-[60%]">
                 <YouTube
                     videoId={videoId}
                     onReady={onReady}
@@ -160,7 +160,7 @@ const NoteTakingApp = () => {
                         height: "450px",
                     }}
                 />
-                <div className=" w-full p-2 shadow-lg">
+                <div className="w-full p-2 shadow-lg">
                     <form onSubmit={addNoteData}>
                         <div className="mb-2">
                             <label
@@ -232,7 +232,7 @@ const NoteTakingApp = () => {
                             </svg>
                         </button>
                     </div>
-                    <ul className="flex flex-col pl-2  overflow-y-auto">
+                    <ul className="flex flex-col pl-2">
                         {filteredNotes.map((note) => (
                             <li
                                 key={note._id}
