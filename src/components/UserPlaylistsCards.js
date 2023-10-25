@@ -3,9 +3,11 @@ import { useSelector } from "react-redux";
 import axios from "../axios-config"; // Import your Axios instance
 import { useNavigate, Navigate } from "react-router-dom"; // Import useNavigate for navigation
 import { ToastContainer, toast } from "react-toastify";
+import TokenService from "../Services/token.service";
 import "react-toastify/dist/ReactToastify.css";
 const UserPlaylistsCards = ({ playlistInfo }) => {
     const userId = useSelector((store) => store.authentication.userId);
+    const user = TokenService.getUser();
     const navigate = useNavigate();
      function notifyme(msg) {
          const notify = () =>
@@ -28,9 +30,11 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
               };
 
              
-              await axios.post(`/users/${userId}/trackPlaylists`, payload).then(() => {
-                    notifyme("Playlist added to learning successfully");
-              })
+              await axios
+                  .post(`/users/${user.userId}/trackPlaylists`, payload)
+                  .then(() => {
+                      notifyme("Playlist added to learning successfully");
+                  });
               navigate("/");
           } catch (error) {
               // Handle errors (e.g., display an error message)

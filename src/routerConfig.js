@@ -8,6 +8,7 @@ import Demo from "./components/Demo";
 import UserUnTrackPlayList from "./components/UserUnTrackPlayList";
 import UserTrackPlayList from "./components/UserTrackPlayLists";
 import LoginComponent from "./components/LoginComponent";
+import Register from "./components/Register";
 import PlaylistVideos from "./components/PlaylistVideos";
 import { useSelector } from "react-redux";
 import TokenService from "./Services/token.service";
@@ -52,6 +53,10 @@ const appRouter = createBrowserRouter([
     {
         path: "/login",
         element: <LoginComponent />,
+    },
+    {
+        path: "/register",
+        element: <Register />,
     },
 ]);
 

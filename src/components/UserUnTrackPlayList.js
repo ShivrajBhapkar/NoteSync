@@ -5,17 +5,18 @@ import axios from "../axios-config";
 import UserPlaylistsCards from "./UserPlaylistsCards";
 import { useSelector } from "react-redux";
 import { ToastContainer, toast } from "react-toastify";
+import TokenService from "../Services/token.service";
 import "react-toastify/dist/ReactToastify.css";
 const UserUnTrackPlayList = () => {
     const [playlists, setPlaylists] = useState([]);
+    const user = TokenService.getUser();
     useEffect(() => {
         getVideos();
     }, []);
-    const userId = useSelector((store) => store.authentication.userId);
     const getVideos = async () => {
         try {
             const response = await axios.get(
-                `/users/${userId}/untrackPlaylists`
+                `/users/${user.userId}/untrackPlaylists`
             );
 
             if (response.status === 200) {
