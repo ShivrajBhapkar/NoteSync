@@ -13,7 +13,7 @@ import { BiSolidSend } from "react-icons/bi";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import tokenService from "../Services/token.service";
 import { BsCardText } from "react-icons/bs";
-import { BiEdit, BiTrash } from "react-icons/bi";
+import { BiEdit, BiTrash, BiSearch } from "react-icons/bi";
 import { fetchVideoInfo } from "../Services/noteServices";
 function formatTime(timeInSeconds) {
     if (timeInSeconds) {
@@ -43,15 +43,22 @@ const NoteTakingApp = () => {
     const { playlistId } = useParams();
     const { videoId } = useParams();
     const dispatch = useDispatch();
+    const [isEditing, setIsEditing] = useState(false);
+    const [editingNote, setEditingNote] = useState(null);
     const notes = useSelector((state) => state.notes.data);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
         useState(false);
     const [noteToDeleteId, setNoteToDeleteId] = useState("");
+  const [selectedNoteToDelete, setSelectedNoteToDelete] = useState(null);
 
-    const openDeleteConfirmationModal = (noteId) => {
-        setNoteToDeleteId(noteId);
-        setIsDeleteConfirmationOpen(true);
-    };
+  const openDeleteConfirmationModalForNote = (noteId) => {
+      setSelectedNoteToDelete(noteId);
+      setIsDeleteConfirmationOpen(true);
+  };
+    // const openDeleteConfirmationModal = (noteId) => {
+    //     setNoteToDeleteId(noteId);
+    //     setIsDeleteConfirmationOpen(true);
+    // };
 
     const closeDeleteConfirmationModal = () => {
         setIsDeleteConfirmationOpen(false);
@@ -88,11 +95,13 @@ const NoteTakingApp = () => {
         initialText,
         initialTimestamp
     ) => {
-        setSelectedNoteId(noteId);
-        setEditedNoteText(initialText);
-        setEditedNoteTitle(initialTitle);
-        setEditedNoteTimestamp(initialTimestamp);
-        setIsEditModalOpen(true);
+        setEditingNote({
+            noteId,
+            initialTitle,
+            initialText,
+            initialTimestamp,
+        });
+        setIsEditing(true);
     };
     const onReady = (event) => {
         setPlayer(event.target);
@@ -140,15 +149,15 @@ const NoteTakingApp = () => {
     };
     console.log("VideoTitle", videoInfo.videoTitle);
     const sortedNotes = [...notes].sort(compareNotesByTimestamp);
-  const filteredNotes = sortedNotes.filter((note) => {
-      if (note && note.title && note.text) {
-          return (
-              note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-              note.text.toLowerCase().includes(searchQuery.toLowerCase())
-          );
-      }
-      return false; // Exclude notes with missing or empty title/text properties.
-  });
+    const filteredNotes = sortedNotes.filter((note) => {
+        if (note && note.title && note.text) {
+            return (
+                note.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                note.text.toLowerCase().includes(searchQuery.toLowerCase())
+            );
+        }
+        return false; // Exclude notes with missing or empty title/text properties.
+    });
     return dataIsReady ? (
         <div className="flex max-h-screen flex-col  lg:flex-row xl:flex-row ">
             <div className="flex-[60%]">
@@ -208,102 +217,103 @@ const NoteTakingApp = () => {
                 </div>
                 <div>
                     <h2 className="text-xl font-300 font-bold">Notes:</h2>
-                    <div className="relative text-gray-600 mb-4">
-                        <input
-                            type="text"
-                            placeholder="Search notes..."
-                            className="border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring focus:border-blue-500 w-full"
-                            onChange={(e) => setSearchQuery(e.target.value)}
+                    {notes.length > 0 && (
+                        <div className="relative text-gray-600 mb-4">
+                            <input
+                                type="text"
+                                placeholder="Search notes..."
+                                className="border border-gray-300 rounded-md px-3 py-2 pr-10 focus:outline-none focus:ring focus:border-blue-500 w-full"
+                                onChange={(e) => setSearchQuery(e.target.value)}
+                            />
+                            <button className="absolute right-3 top-2 text-gray-400">
+                                <BiSearch size={20} />
+                            </button>
+                        </div>
+                    )}
+                    {selectedNoteToDelete ? (
+                        // Render the delete confirmation modal when a note is selected for deletion
+                        <DeleteConfirmationModal
+                            isOpen={isDeleteConfirmationOpen}
+                            onClose={() => {
+                                setSelectedNoteToDelete(null);
+                                setIsDeleteConfirmationOpen(false);
+                            }}
+                            onConfirm={deleteNoteData}
                         />
-                        <button className="absolute right-3 top-2 text-gray-400">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                className="h-6 w-6"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke="currentColor"
-                            >
-                                <path
-                                    strokeLinecap="round"
-                                    strokeLinejoin="round"
-                                    strokeWidth="2"
-                                    d="M14 14l5-5m0 0l-5-5m5 5H3"
-                                />
-                            </svg>
-                        </button>
-                    </div>
-                    <ul className="flex flex-col pl-2">
-                        {filteredNotes.map((note) => (
-                            <li
-                                key={note._id}
-                                className="border rounded-lg p-4 mb-2 shadow-md  border-gray-300"
-                            >
-                                <div className="flex  flex-col justify-between gap-y-2">
-                                    <div className="text-center">
-                                        <p>{note.title}</p>
-                                    </div>
-                                    <div className="flex justify-between">
-                                        <strong>
-                                            Time: {formatTime(note.timestamp)}
-                                        </strong>
-
-                                        <p>{note?.text}</p>
-
-                                        <div>
-                                            <button>
-                                                <BsCardText />
-                                            </button>
-                                            <button
-                                                onClick={() =>
-                                                    handleEditNoteClick(
-                                                        note._id,
-                                                        note.title,
-                                                        note.text,
-                                                        note.timestamp
-                                                    )
-                                                }
-                                                className=" text-blue-500 px-2 py-1 rounded-lg ml-2"
-                                            >
-                                                <BiEdit />
-                                            </button>
-                                            <button
-                                                onClick={() =>
-                                                    openDeleteConfirmationModal(
-                                                        note._id
-                                                    )
-                                                }
-                                                className=" text-red-500 px-2 py-1 rounded-lg ml-2"
-                                            >
-                                                <BiTrash />
-                                            </button>
+                    ) : isEditing ? (
+                        <EditNoteModal
+                            isOpen={isEditing}
+                            onClose={() => {
+                                setEditingNote(null);
+                                setIsEditing(false);
+                            }}
+                            initialText={editingNote.initialText}
+                            initialTitle={editingNote.initialTitle}
+                            initialTimestamp={editingNote.initialTimestamp}
+                            onSave={(newText, newTimestamp, newTitle) => {
+                                updateNoteData(
+                                    editingNote.noteId,
+                                    newTitle,
+                                    newText,
+                                    newTimestamp
+                                );
+                                setEditingNote(null);
+                                setIsEditing(false);
+                            }}
+                        />
+                    ) : (
+                        <ul className="flex flex-col pl-2 h-[100%] overflow-y-scroll">
+                            {filteredNotes.map((note) => (
+                                <li
+                                    key={note._id}
+                                    className="border rounded-lg p-4 mb-2 shadow-md border-gray-300"
+                                >
+                                    <div className="flex flex-col justify-between gap-y-2">
+                                        <div className="text-center">
+                                            <p>{note.title}</p>
+                                        </div>
+                                        <div className="flex justify-between">
+                                            <strong>
+                                                Time:{" "}
+                                                {formatTime(note.timestamp)}
+                                            </strong>
+                                            <p>{note?.text}</p>
+                                            <div>
+                                                <button>
+                                                    <BsCardText />
+                                                </button>
+                                                <button
+                                                    onClick={() =>
+                                                        handleEditNoteClick(
+                                                            note._id,
+                                                            note.title,
+                                                            note.text,
+                                                            note.timestamp
+                                                        )
+                                                    }
+                                                    className="text-blue-500 px-2 py-1 rounded-lg ml-2"
+                                                >
+                                                    <BiEdit />
+                                                </button>
+                                                <button
+                                                    onClick={() =>
+                                                        openDeleteConfirmationModalForNote(
+                                                            note._id
+                                                        )
+                                                    }
+                                                    className="text-red-500 px-2 py-1 rounded-lg ml-2"
+                                                >
+                                                    <BiTrash />
+                                                </button>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            </li>
-                        ))}
-                    </ul>
+                                </li>
+                            ))}
+                        </ul>
+                    )}
                 </div>
             </div>
-            <EditNoteModal
-                isOpen={isEditModalOpen}
-                onClose={() => setIsEditModalOpen(false)}
-                initialText={editedNoteText}
-                initialTitle={editedNoteTitle}
-                initialTimestamp={editedNoteTimestamp}
-                onSave={(newText, newTimestamp, newTitle) => {
-                    updateNoteData(
-                        selectedNoteId,
-                        newTitle,
-                        newText,
-                        newTimestamp
-                    );
-                }}
-            />
-            <DeleteConfirmationModal
-                isOpen={isDeleteConfirmationOpen}
-                onClose={closeDeleteConfirmationModal}
-                onConfirm={deleteNoteData}
-            />
         </div>
     ) : (
         <div>Loading data...</div>

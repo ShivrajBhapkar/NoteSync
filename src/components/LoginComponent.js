@@ -29,7 +29,7 @@ const LoginComponent = () => {
                             placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
-                            className="w-full border-none bg-transparent outline-none placeholder-italic focus:outline-none"
+                            className="w-full border-none bg-transparent outline-none placeholder-italic focus:outline-none rounded-sm"
                         />
                     </div>
 
@@ -39,7 +39,7 @@ const LoginComponent = () => {
                             placeholder="Password"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
-                            className="w-full border-none bg-transparent outline-none placeholder-italic focus:outline-none"
+                            className="w-full border-none bg-transparent outline-none placeholder-italic focus:outline-none rounded-sm"
                         />
                     </div>
 
