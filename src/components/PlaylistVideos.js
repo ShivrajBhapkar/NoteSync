@@ -4,12 +4,14 @@ import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import tokenService from "../Services/token.service";
+import PlaylistVideosSkeleton from "./PlaylistVideosSkeleton";
 const PlaylistVideos = () => {
     const [playlistData, setPlaylistData] = useState({});
     const [videos, setVideos] = useState([]);
     const [error, setError] = useState(null); // New state for error handling
     const { playlistId } = useParams();
     const { userId } = tokenService.getUser();
+      const [loading, setLoading] = useState(true);
     useEffect(() => {
         // First API call to fetch playlist info
         axios
@@ -29,6 +31,7 @@ const PlaylistVideos = () => {
             .get(`/users/${userId}/playlist/${playlistId}/videos`)
             .then((videoResponse) => {
                 setVideos(videoResponse.data);
+                setLoading(false); 
             })
             .catch((videoError) => {
                 console.error("Error fetching videos:", videoError);
@@ -37,6 +40,9 @@ const PlaylistVideos = () => {
     }, [userId, playlistId]);
 
     // Check for errors and display an error message
+      if (loading) {
+          return <PlaylistVideosSkeleton />;
+      }
     if (error) {
         return <div>{error}</div>;
     }

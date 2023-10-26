@@ -62,7 +62,7 @@ const Body = () => {
                         </button>
                     </div>
                 </div>
-                <div className="px-5 pt-2 h-[100%] overflow-y-hidden">
+                <div className="px-5 pt-2 h-[98%] ">
                     <Outlet />
                 </div>
             </div>

@@ -42,7 +42,43 @@ const NoteTakingApp = () => {
     const [editingNote, setEditingNote] = useState(null);
     const notes = useSelector((state) => state.notes.data);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
-  const [selectedNoteToDelete, setSelectedNoteToDelete] = useState(null);
+    const [selectedNoteToDelete, setSelectedNoteToDelete] = useState(null);
+    const playerRef = React.useRef(null);
+    const [playerDimensions, setPlayerDimensions] = useState({
+        width: "100%",
+        height: "450px",
+    });
+    
+    //  Handling youtube compoent reposiness
+  useEffect(() => {
+      const handleResize = () => {
+          const viewportWidth = window.innerWidth;
+
+          // Adjust dimensions based on screen size
+          if (viewportWidth >= 768) {
+              setPlayerDimensions({
+                  width: "100%",
+                  height: "450px",
+              });
+          } else {
+              setPlayerDimensions({
+                  width: "100%",
+                  height: "300px", // Adjust the height for smaller screens
+              });
+          }
+      };
+
+      // Listen for window resize events
+      window.addEventListener("resize", handleResize);
+
+      // Initial setup
+      handleResize();
+
+      // Clean up the event listener when the component unmounts
+      return () => {
+          window.removeEventListener("resize", handleResize);
+      };
+  }, []);
 
 // Fetch Video Info
      const fetchVideoInfoData = () => {
@@ -133,7 +169,17 @@ const addNoteData = async (e) => {
      setIsPlayerReady(true);
  };
 
-    
+    // Seek video at specific time 
+    const handleTimestampClick = (timestamp) => {
+        if (playerRef.current) {
+            // Convert the timestamp (in the format 'minutes:seconds') to seconds
+            const [minutes, seconds] = timestamp.split(":");
+            const totalSeconds = parseInt(minutes) * 60 + parseInt(seconds);
+
+            // Use the seekTo method to move the video to the desired timestamp
+            player.seekTo(totalSeconds);
+        }
+    };
    
     useEffect(() => {
         // Create two promises for the API calls
@@ -170,15 +216,13 @@ const addNoteData = async (e) => {
     });
     
     return dataIsReady ? (
-        <div className="flex h-full flex-col lg:flex-row xl:flex-row overflow-y-auto">
+        <div className="flex lg:h-full md:h-full xl:h-full max-h-screen flex-col lg:flex-row xl:flex-row sm:overflow-y-auto lg:overflow-y-hidden xl:overflow-y-hidden overflow-y-auto">
             <div className="flex-[60%] ">
                 <YouTube
                     videoId={videoId}
                     onReady={onReady}
-                    opts={{
-                        width: "100%",
-                        height: "450px",
-                    }}
+                    opts={playerDimensions}
+                    ref={playerRef}
                 />
                 <div className="w-full p-2 shadow-lg">
                     <form onSubmit={addNoteData}>
@@ -216,7 +260,7 @@ const addNoteData = async (e) => {
                     </form>
                 </div>
             </div>
-            <div className="flex-[40%] p-4">
+            <div className="flex-[40%] p-4 h-screen md::overflow-y-auto lg:overflow-y-auto xl:overflow-y-auto">
                 <div className=" p-2 rounded-lg shadow-sm border-2 border-solid border-gray-300">
                     <h3 className="text-lg font-semibold">
                         {videoInfo.videoTitle}
@@ -227,8 +271,10 @@ const addNoteData = async (e) => {
                     <p className="text-sm text-gray-600">{`Channel: ${videoInfo.channelTitle}`}</p>
                 </div>
                 <div>
-                    <h2 className="text-xl font-300 font-bold">Notes:</h2>
                     {sortedNotes.length > 0 && (
+                        <h2 className="text-xl font-300 font-bold">Notes:</h2>
+                    )}
+                    {sortedNotes.length > 0 ? (
                         <div className="relative text-gray-600 mb-4">
                             <input
                                 type="text"
@@ -240,6 +286,12 @@ const addNoteData = async (e) => {
                                 <BiSearch size={20} />
                             </button>
                         </div>
+                    ) : (
+                        // Render a message when there are no notes
+                        <p className="text-gray-600 font-bold text-xl text-center my-4">
+                            You haven't added any notes yet. Start by adding
+                            your first note!
+                        </p>
                     )}
                     {selectedNoteToDelete ? (
                         <DeleteConfirmationModal
@@ -283,12 +335,32 @@ const addNoteData = async (e) => {
                                 >
                                     <div className="flex flex-col justify-between gap-y-2">
                                         <div className="text-center">
-                                            <p>{note.title}</p>
+                                            <p
+                                                onClick={() =>
+                                                    handleTimestampClick(
+                                                        formatTime(
+                                                            note.timestamp
+                                                        )
+                                                    )
+                                                }
+                                            >
+                                                {note.title}
+                                            </p>
                                         </div>
                                         <div className="flex justify-between">
-                                            <strong>
-                                                Time:
-                                                {formatTime(note.timestamp)}
+                                            <strong
+                                                onClick={() =>
+                                                    handleTimestampClick(
+                                                        formatTime(
+                                                            note.timestamp
+                                                        )
+                                                    )
+                                                }
+                                            >
+                                                Time :
+                                                    <span className="cursor-pointer pl-2 text-blue-500">
+                                                    {formatTime(note.timestamp)}
+                                                </span>
                                             </strong>
                                             <p>{note?.text}</p>
                                             <div>
