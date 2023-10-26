@@ -33,12 +33,7 @@ const NoteTakingApp = () => {
     const [isPlayerReady, setIsPlayerReady] = useState(false);
     const [noteText, setNoteText] = useState("");
     const [noteTitle, setNoteTitle] = useState("");
-    const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const [selectedNoteId, setSelectedNoteId] = useState("");
-    const [editedNoteText, setEditedNoteText] = useState("");
-    const [editedNoteTitle, setEditedNoteTitle] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
-    const [editedNoteTimestamp, setEditedNoteTimestamp] = useState("");
     const { userId } = tokenService.getUser();
     const { playlistId } = useParams();
     const { videoId } = useParams();
@@ -46,49 +41,66 @@ const NoteTakingApp = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editingNote, setEditingNote] = useState(null);
     const notes = useSelector((state) => state.notes.data);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
-        useState(false);
-    const [noteToDeleteId, setNoteToDeleteId] = useState("");
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
   const [selectedNoteToDelete, setSelectedNoteToDelete] = useState(null);
 
-  const openDeleteConfirmationModalForNote = (noteId) => {
-      setSelectedNoteToDelete(noteId);
-      setIsDeleteConfirmationOpen(true);
-  };
-    // const openDeleteConfirmationModal = (noteId) => {
-    //     setNoteToDeleteId(noteId);
-    //     setIsDeleteConfirmationOpen(true);
-    // };
-
-    const closeDeleteConfirmationModal = () => {
-        setIsDeleteConfirmationOpen(false);
+// Fetch Video Info
+     const fetchVideoInfoData = () => {
+         fetchVideoInfo(playlistId, videoId)
+             .then((videoInfo) => {
+                 setVideoInfo(videoInfo);
+             })
+             .catch((error) => {
+                 console.error("Failed to fetch video information:", error);
+             });
     };
-    const fetchVideoInfoData = () => {
-        fetchVideoInfo(playlistId, videoId)
-            .then((videoInfo) => {
-                setVideoInfo(videoInfo);
-            })
-            .catch((error) => {
-                console.error("Failed to fetch video information:", error);
-            });
-    };
+    
+ // Fetch Notes list
     const fetchNotesData = () => {
         dispatch(fetchNotesUtil({ userId, playlistId, videoId }));
     };
-    const updateNoteData = (noteId, newTitle, newText, newTimestamp) => {
-        const updatedNote = {
-            title: newTitle,
-            timestamp: newTimestamp,
-            text: newText,
-        };
-        dispatch(updateNoteUtil({ noteId, userId, updatedNote }));
+
+// Update Notes
+   const updateNoteData = (noteId, newTitle, newText, newTimestamp) => {
+       const updatedNote = {
+           title: newTitle,
+           timestamp: newTimestamp,
+           text: newText,
+       };
+       dispatch(updateNoteUtil({ noteId, userId, updatedNote }));
     };
-    const deleteNoteData = () => {
-        dispatch(deleteNoteUtil({ userId, noteToDeleteId })).then(() => {
-            closeDeleteConfirmationModal();
-        });
+    
+// Delete Note
+        const deleteNoteData = (selectedNoteToDelete) => {
+            dispatch(deleteNoteUtil({ userId, selectedNoteToDelete })).then(
+                () => {
+                    closeDeleteConfirmationModal();
+                }
+            );
     };
 
+    // Create Note Handle
+    
+const addNoteData = async (e) => {
+    e.preventDefault();
+    if (player) {
+        const currentTime = player.getCurrentTime();
+        const isoTimestamp = new Date(currentTime * 1000).toISOString();
+        const newNote = {
+            title: noteTitle,
+            timestamp: isoTimestamp,
+            text: noteText,
+        };
+        dispatch(createNoteUtil({ userId, playlistId, videoId, newNote })).then(
+            () => {
+                setNoteText("");
+                setNoteTitle("");
+            }
+        );
+    }
+};
+
+// Update Note Handle
     const handleEditNoteClick = (
         noteId,
         initialTitle,
@@ -103,10 +115,26 @@ const NoteTakingApp = () => {
         });
         setIsEditing(true);
     };
-    const onReady = (event) => {
-        setPlayer(event.target);
-        setIsPlayerReady(true);
+
+// Delete Note handle
+  const openDeleteConfirmationModalForNote = (noteId) => {
+      setSelectedNoteToDelete(noteId);
+      setIsDeleteConfirmationOpen(true);
+  };
+
+    const closeDeleteConfirmationModal = () => {
+        setIsDeleteConfirmationOpen(false);
     };
+   
+    // On Player Ready
+ 
+ const onReady = (event) => {
+     setPlayer(event.target);
+     setIsPlayerReady(true);
+ };
+
+    
+   
     useEffect(() => {
         // Create two promises for the API calls
         const fetchNotesPromise = fetchNotesData();
@@ -124,30 +152,12 @@ const NoteTakingApp = () => {
             });
     }, [videoId]);
 
-    const addNoteData = async (e) => {
-        e.preventDefault();
-        if (player) {
-            const currentTime = player.getCurrentTime();
-            const isoTimestamp = new Date(currentTime * 1000).toISOString();
-            const newNote = {
-                title: noteTitle,
-                timestamp: isoTimestamp,
-                text: noteText,
-            };
-            dispatch(
-                createNoteUtil({ userId, playlistId, videoId, newNote })
-            ).then(() => {
-                setNoteText("");
-                setNoteTitle("");
-            });
-        }
-    };
+    
     const compareNotesByTimestamp = (noteA, noteB) => {
         const timestampA = new Date(noteA.timestamp);
         const timestampB = new Date(noteB.timestamp);
         return timestampA - timestampB;
     };
-    console.log("VideoTitle", videoInfo.videoTitle);
     const sortedNotes = [...notes].sort(compareNotesByTimestamp);
     const filteredNotes = sortedNotes.filter((note) => {
         if (note && note.title && note.text) {
@@ -158,9 +168,10 @@ const NoteTakingApp = () => {
         }
         return false; // Exclude notes with missing or empty title/text properties.
     });
+    
     return dataIsReady ? (
-        <div className="flex max-h-screen flex-col  lg:flex-row xl:flex-row ">
-            <div className="flex-[60%]">
+        <div className="flex h-full flex-col lg:flex-row xl:flex-row overflow-y-auto">
+            <div className="flex-[60%] ">
                 <YouTube
                     videoId={videoId}
                     onReady={onReady}
@@ -205,7 +216,7 @@ const NoteTakingApp = () => {
                     </form>
                 </div>
             </div>
-            <div className="flex-[40%] max-h-screen h-screen overflow-y-auto pl-4 ">
+            <div className="flex-[40%] p-4">
                 <div className=" p-2 rounded-lg shadow-sm border-2 border-solid border-gray-300">
                     <h3 className="text-lg font-semibold">
                         {videoInfo.videoTitle}
@@ -217,7 +228,7 @@ const NoteTakingApp = () => {
                 </div>
                 <div>
                     <h2 className="text-xl font-300 font-bold">Notes:</h2>
-                    {notes.length > 0 && (
+                    {sortedNotes.length > 0 && (
                         <div className="relative text-gray-600 mb-4">
                             <input
                                 type="text"
@@ -231,14 +242,16 @@ const NoteTakingApp = () => {
                         </div>
                     )}
                     {selectedNoteToDelete ? (
-                        // Render the delete confirmation modal when a note is selected for deletion
                         <DeleteConfirmationModal
                             isOpen={isDeleteConfirmationOpen}
                             onClose={() => {
                                 setSelectedNoteToDelete(null);
                                 setIsDeleteConfirmationOpen(false);
                             }}
-                            onConfirm={deleteNoteData}
+                            selectedNoteToDelete={selectedNoteToDelete}
+                            onSave={(selectedNoteToDelete) => {
+                                deleteNoteData(selectedNoteToDelete);
+                            }}
                         />
                     ) : isEditing ? (
                         <EditNoteModal
@@ -262,7 +275,7 @@ const NoteTakingApp = () => {
                             }}
                         />
                     ) : (
-                        <ul className="flex flex-col pl-2 h-[100%] overflow-y-scroll">
+                        <ul className="flex flex-col pl-2 h-[100%] max-h-max overflow-y-auto">
                             {filteredNotes.map((note) => (
                                 <li
                                     key={note._id}
@@ -274,7 +287,7 @@ const NoteTakingApp = () => {
                                         </div>
                                         <div className="flex justify-between">
                                             <strong>
-                                                Time:{" "}
+                                                Time:
                                                 {formatTime(note.timestamp)}
                                             </strong>
                                             <p>{note?.text}</p>

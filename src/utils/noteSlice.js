@@ -11,7 +11,7 @@ export const fetchNotesUtil = createAsyncThunk(
     "notes/fetchNotes",
     async (params) => {
         const response = await fetchNotes(params);
-        console.log(response);
+        
         return response;
     }
 );
@@ -20,7 +20,7 @@ export const createNoteUtil = createAsyncThunk(
     "notes/createNote",
     async (params) => {
         await createNote(params);
-        console.log(params.newNote);
+
         return params.newNote;
     }
 );
@@ -29,7 +29,7 @@ export const updateNoteUtil = createAsyncThunk(
     "notes/updateNote",
     async (params) => {
         await updateNote(params);
-        console.log(params.updatedNote);
+
         return params;
     }
 );
@@ -37,8 +37,8 @@ export const updateNoteUtil = createAsyncThunk(
 export const deleteNoteUtil = createAsyncThunk(
     "notes/deleteNote",
     async (params) => {
-      await deleteNote(params);
-        return params.noteToDeleteId; // Return the deleted noteId for removing it from the state
+        await deleteNote(params);
+        return params.selectedNoteToDelete; // Return the deleted noteId for removing it from the state
     }
 );
 

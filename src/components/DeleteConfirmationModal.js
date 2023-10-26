@@ -1,6 +1,10 @@
 import React from "react";
 
-const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
+const DeleteConfirmationModal = ({ isOpen, onSave , onClose, onConfirm, selectedNoteToDelete }) => {
+     const handleSave = () => {
+         onSave(selectedNoteToDelete);
+         onClose();
+     };
     return (
         isOpen && (
             <div className="modal">
@@ -10,7 +14,7 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm }) => {
                         Are you sure you want to delete this note permanently?
                     </p>
                     <div className="modal-buttons">
-                        <button onClick={onConfirm}>Delete</button>
+                        <button onClick={handleSave}>Delete</button>
                         <button onClick={onClose}>Cancel</button>
                     </div>
                 </div>

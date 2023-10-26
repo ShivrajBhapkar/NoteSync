@@ -34,7 +34,7 @@ export const updateNote = ({ noteId, userId, updatedNote }) => {
     return axios.put(apiUrl, updatedNote);
 };
 
-export const deleteNote = ({ userId, noteToDeleteId }) => {
-    const apiUrl = `/users/${userId}/notes/${noteToDeleteId}`;
+export const deleteNote = ({ userId, selectedNoteToDelete }) => {
+    const apiUrl = `/users/${userId}/notes/${selectedNoteToDelete}`;
     return axios.delete(apiUrl);
 };
