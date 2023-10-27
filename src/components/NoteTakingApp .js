@@ -171,14 +171,14 @@ const addNoteData = async (e) => {
 
     // Seek video at specific time 
     const handleTimestampClick = (timestamp) => {
-        if (playerRef.current) {
+      
             // Convert the timestamp (in the format 'minutes:seconds') to seconds
             const [minutes, seconds] = timestamp.split(":");
             const totalSeconds = parseInt(minutes) * 60 + parseInt(seconds);
 
             // Use the seekTo method to move the video to the desired timestamp
             player.seekTo(totalSeconds);
-        }
+        
     };
    
     useEffect(() => {
@@ -222,7 +222,7 @@ const addNoteData = async (e) => {
                     videoId={videoId}
                     onReady={onReady}
                     opts={playerDimensions}
-                    ref={playerRef}
+                
                 />
                 <div className="w-full p-2 shadow-lg">
                     <form onSubmit={addNoteData}>

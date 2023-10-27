@@ -8,13 +8,11 @@ const Body = () => {
     const [showSidebar, setShowSidebar] = useState(true);
 
     const handleSidebarToggle = () => {
-        
         setShowSidebar(!showSidebar);
     };
 
     const handleHamburgerClick = () => {
         if (window.innerWidth <= 768) {
-            console.log(window.innerWidth)
             handleSidebarToggle(); // Toggle the sidebar when the screen is less than medium
         }
     };

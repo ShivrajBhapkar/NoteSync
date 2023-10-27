@@ -3,9 +3,10 @@ import { useSelector } from "react-redux";
 import axios from "../axios-config";
 import { useNavigate } from "react-router-dom";
 import Button from "./ui/Button";
-
+import tokenService from "../Services/token.service";
 const UserPlaylistsCards = ({ playlistInfo }) => {
-    const userId = useSelector((store) => store.authentication.userId);
+   
+    const { userId } = tokenService.getUser();
     const navigate = useNavigate();
 
     const navigateToPlaylist = () => {
@@ -27,14 +28,14 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
     };
 
     return (
-        <div className="p-2 m-2">
-            <div className="relative w-full aspect-w-2 aspect-h-3 shadow-lg overflow-hidden">
+        <div className="relative p-2 m-2 w-72 h-74 shadow-lg overflow-hidden">
+          
                 <img
                     className="object-cover rounded-lg"
                     alt="thumbnail"
                     src={playlistInfo.playlistImageURL}
                 />
-            </div>
+           
             <div className="mt-4">
                 <ul>
                     <li className="font-bold truncate text-center">
@@ -47,7 +48,7 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
                         label="Continue"
                         action="primary"
                     />
-                     
+
                     <Button
                         onClick={untrackPlaylist}
                         label="Untrack"

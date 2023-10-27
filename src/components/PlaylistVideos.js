@@ -46,7 +46,7 @@ const PlaylistVideos = () => {
     if (error) {
         return <div>{error}</div>;
     }
-    console.log("videos", videos);
+
 
     // Once both API requests complete, or in the initial state, the UI will be rendered
     return (
