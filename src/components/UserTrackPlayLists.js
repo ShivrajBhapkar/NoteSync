@@ -6,11 +6,11 @@ import axios from "../axios-config";
 import UserLearningCards from "./UserLearningCards";
 import tokenService from "../Services/token.service";
 import SkeletonLoader from "./SkeletonLoader";
-import ActionModel from "./ActionModel"
+import ActionModel from "./ActionModel";
 const UserUnTrackPlayList = () => {
     const [playlists, setPlaylists] = useState([]);
     const [loading, setLoading] = useState(true);
-        const navigate = useNavigate(); 
+    const navigate = useNavigate();
     useEffect(() => {
         getVideos();
     }, []);
@@ -38,28 +38,29 @@ const UserUnTrackPlayList = () => {
                     <SkeletonLoader />
                 </div>
             ) : (
-                <div className="flex justify-center items-center h-screen">
+                <div className="flex  items-center h-screen">
                     {playlists.length === 0 ? (
                         <ActionModel
-                                title="It seems like you have not started learning yet."
-                                subtitle="Let's start your learning by clicking on button below."
+                            title="It seems like you have not started learning yet."
+                            subtitle="Let's start your learning by clicking on button below."
                             buttonText="Get Started"
                             action={() => {
                                 navigate("/untrack");
                             }}
                         />
-                        ) : (
-                             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 h-screen overflow-y-auto">    
-                                    {playlists.map((playlist) => (
-                                        <Link
-                                            to={`/playlist/${playlist.playlistId}`}
-                                            key={playlist.playlistId}
-                                        >
-                                            <UserLearningCards playlistInfo={playlist} />
-                                        </Link>
-                                    ))
-                                    }
-                                    </div>
+                    ) : (
+                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 h-screen overflow-y-auto">
+                            {playlists.map((playlist) => (
+                                <Link
+                                    to={`/playlist/${playlist.playlistId}`}
+                                    key={playlist.playlistId}
+                                >
+                                    <UserLearningCards
+                                        playlistInfo={playlist}
+                                    />
+                                </Link>
+                            ))}
+                        </div>
                     )}
                 </div>
             )}

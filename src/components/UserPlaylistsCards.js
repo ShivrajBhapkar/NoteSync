@@ -50,7 +50,7 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
         }
     }
     return (
-        <div className="relative p-2 m-2 w-72 h-72 shadow-lg overflow-hidden">
+        <div className="relative p-2 m-2 w-[90%] h-74 shadow-lg overflow-x-hidden">
             <img
                 className="rounded-lg"
                 alt="thumbnail"
@@ -66,7 +66,7 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
                     <LoadingButton
                         loading={loading}
                         text="Add To Learning"
-                        onClick={addToLearning}
+                        Action={addToLearning}
                     />
                 </div>
             </div>

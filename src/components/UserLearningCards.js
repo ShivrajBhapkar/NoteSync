@@ -5,7 +5,6 @@ import { useNavigate } from "react-router-dom";
 import Button from "./ui/Button";
 import tokenService from "../Services/token.service";
 const UserPlaylistsCards = ({ playlistInfo }) => {
-   
     const { userId } = tokenService.getUser();
     const navigate = useNavigate();
 
@@ -28,14 +27,13 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
     };
 
     return (
-        <div className="relative p-2 m-2 w-72 h-74 shadow-lg overflow-hidden">
-          
-                <img
-                    className="object-cover rounded-lg"
-                    alt="thumbnail"
-                    src={playlistInfo.playlistImageURL}
-                />
-           
+        <div className="relative p-2 m-2 w-[90%] h-74 shadow-lg overflow-x-hidden">
+            <img
+                className="object-cover rounded-lg"
+                alt="thumbnail"
+                src={playlistInfo.playlistImageURL}
+            />
+
             <div className="mt-4">
                 <ul>
                     <li className="font-bold truncate text-center">

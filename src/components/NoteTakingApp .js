@@ -15,6 +15,7 @@ import tokenService from "../Services/token.service";
 import { BsCardText } from "react-icons/bs";
 import { BiEdit, BiTrash, BiSearch } from "react-icons/bi";
 import { fetchVideoInfo } from "../Services/noteServices";
+import NoteTakingAppSkeleton from "./NoteTakingAppSkeleton";
 function formatTime(timeInSeconds) {
     if (timeInSeconds) {
         const timestampDate = new Date(timeInSeconds);
@@ -222,7 +223,6 @@ const addNoteData = async (e) => {
                     videoId={videoId}
                     onReady={onReady}
                     opts={playerDimensions}
-                
                 />
                 <div className="w-full p-2 shadow-lg">
                     <form onSubmit={addNoteData}>
@@ -358,7 +358,7 @@ const addNoteData = async (e) => {
                                                 }
                                             >
                                                 Time :
-                                                    <span className="cursor-pointer pl-2 text-blue-500">
+                                                <span className="cursor-pointer pl-2 text-blue-500">
                                                     {formatTime(note.timestamp)}
                                                 </span>
                                             </strong>
@@ -401,7 +401,7 @@ const addNoteData = async (e) => {
             </div>
         </div>
     ) : (
-        <div>Loading data...</div>
+        <NoteTakingAppSkeleton/>
     );
 };
 
