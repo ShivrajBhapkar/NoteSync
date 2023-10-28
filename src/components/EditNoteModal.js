@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 const EditNoteModal = ({
     isOpen,
     onClose,
+    NoteId,
     initialText,
     initialTitle,
     initialTimestamp,
@@ -12,7 +13,12 @@ const EditNoteModal = ({
     const [title, setTitle] = useState(initialTitle);
 
     const handleSave = () => {
-        onSave(text || initialText, initialTimestamp, title || initialTitle);
+        onSave(
+            NoteId,
+            text || initialText,
+            initialTimestamp,
+            title || initialTitle
+        );
         onClose();
     };
 

@@ -16,6 +16,7 @@ import { BsCardText } from "react-icons/bs";
 import { BiEdit, BiTrash, BiSearch } from "react-icons/bi";
 import { fetchVideoInfo } from "../Services/noteServices";
 import NoteTakingAppSkeleton from "./NoteTakingAppSkeleton";
+import NoteCard from "./NoteCard";
 function formatTime(timeInSeconds) {
     if (timeInSeconds) {
         const timestampDate = new Date(timeInSeconds);
@@ -42,102 +43,108 @@ const NoteTakingApp = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editingNote, setEditingNote] = useState(null);
     const notes = useSelector((state) => state.notes.data);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+        useState(false);
     const [selectedNoteToDelete, setSelectedNoteToDelete] = useState(null);
+
+    const [isCardOpen, setIsCardOpen] = useState(false);
+    const [selectedNote, setSelectedNote] = useState(null);
+
     const playerRef = React.useRef(null);
     const [playerDimensions, setPlayerDimensions] = useState({
         width: "100%",
         height: "450px",
     });
-    
-    //  Handling youtube compoent reposiness
-  useEffect(() => {
-      const handleResize = () => {
-          const viewportWidth = window.innerWidth;
-
-          // Adjust dimensions based on screen size
-          if (viewportWidth >= 768) {
-              setPlayerDimensions({
-                  width: "100%",
-                  height: "450px",
-              });
-          } else {
-              setPlayerDimensions({
-                  width: "100%",
-                  height: "300px", // Adjust the height for smaller screens
-              });
-          }
-      };
-
-      // Listen for window resize events
-      window.addEventListener("resize", handleResize);
-
-      // Initial setup
-      handleResize();
-
-      // Clean up the event listener when the component unmounts
-      return () => {
-          window.removeEventListener("resize", handleResize);
-      };
-  }, []);
-
-// Fetch Video Info
-     const fetchVideoInfoData = () => {
-         fetchVideoInfo(playlistId, videoId)
-             .then((videoInfo) => {
-                 setVideoInfo(videoInfo);
-             })
-             .catch((error) => {
-                 console.error("Failed to fetch video information:", error);
-             });
+    const openNoteCard = (note) => {
+        setSelectedNote(note);
+        setIsCardOpen(true);
     };
-    
- // Fetch Notes list
+    //  Handling youtube compoent reposiness
+    useEffect(() => {
+        const handleResize = () => {
+            const viewportWidth = window.innerWidth;
+
+            // Adjust dimensions based on screen size
+            if (viewportWidth >= 768) {
+                setPlayerDimensions({
+                    width: "100%",
+                    height: "450px",
+                });
+            } else {
+                setPlayerDimensions({
+                    width: "100%",
+                    height: "300px", // Adjust the height for smaller screens
+                });
+            }
+        };
+
+        // Listen for window resize events
+        window.addEventListener("resize", handleResize);
+
+        // Initial setup
+        handleResize();
+
+        // Clean up the event listener when the component unmounts
+        return () => {
+            window.removeEventListener("resize", handleResize);
+        };
+    }, []);
+
+    // Fetch Video Info
+    const fetchVideoInfoData = () => {
+        fetchVideoInfo(playlistId, videoId)
+            .then((videoInfo) => {
+                setVideoInfo(videoInfo);
+            })
+            .catch((error) => {
+                console.error("Failed to fetch video information:", error);
+            });
+    };
+
+    // Fetch Notes list
     const fetchNotesData = () => {
         dispatch(fetchNotesUtil({ userId, playlistId, videoId }));
     };
 
-// Update Notes
-   const updateNoteData = (noteId, newTitle, newText, newTimestamp) => {
-       const updatedNote = {
-           title: newTitle,
-           timestamp: newTimestamp,
-           text: newText,
-       };
-       dispatch(updateNoteUtil({ noteId, userId, updatedNote }));
+    // Update Notes
+    const updateNoteData = (noteId, newTitle, newText, newTimestamp) => {
+        const updatedNote = {
+            title: newTitle,
+            timestamp: newTimestamp,
+            text: newText,
+        };
+        dispatch(updateNoteUtil({ noteId, userId, updatedNote }));
     };
-    
-// Delete Note
-        const deleteNoteData = (selectedNoteToDelete) => {
-            dispatch(deleteNoteUtil({ userId, selectedNoteToDelete })).then(
-                () => {
-                    closeDeleteConfirmationModal();
-                }
-            );
+
+    // Delete Note
+    const deleteNoteData = (selectedNoteToDelete) => {
+        dispatch(deleteNoteUtil({ userId, selectedNoteToDelete })).then(() => {
+            closeDeleteConfirmationModal();
+        });
     };
 
     // Create Note Handle
-    
-const addNoteData = async (e) => {
-    e.preventDefault();
-    if (player) {
-        const currentTime = player.getCurrentTime();
-        const isoTimestamp = new Date(currentTime * 1000).toISOString();
-        const newNote = {
-            title: noteTitle,
-            timestamp: isoTimestamp,
-            text: noteText,
-        };
-        dispatch(createNoteUtil({ userId, playlistId, videoId, newNote })).then(
-            () => {
+
+    const addNoteData = async (e) => {
+        e.preventDefault();
+        if (player) {
+            const currentTime = player.getCurrentTime();
+            const isoTimestamp = new Date(currentTime * 1000).toISOString();
+            const newNote = {
+                title: noteTitle,
+                timestamp: isoTimestamp,
+                text: noteText,
+            };
+            dispatch(
+                createNoteUtil({ userId, playlistId, videoId, newNote })
+            ).then(() => {
                 setNoteText("");
                 setNoteTitle("");
-            }
-        );
-    }
-};
+            });
+        }
+    };
 
-// Update Note Handle
+    // Update Note Handle
     const handleEditNoteClick = (
         noteId,
         initialTitle,
@@ -153,35 +160,33 @@ const addNoteData = async (e) => {
         setIsEditing(true);
     };
 
-// Delete Note handle
-  const openDeleteConfirmationModalForNote = (noteId) => {
-      setSelectedNoteToDelete(noteId);
-      setIsDeleteConfirmationOpen(true);
-  };
+    // Delete Note handle
+    const openDeleteConfirmationModalForNote = (noteId) => {
+        setSelectedNoteToDelete(noteId);
+        setIsDeleteConfirmationOpen(true);
+    };
 
     const closeDeleteConfirmationModal = () => {
         setIsDeleteConfirmationOpen(false);
     };
-   
+
     // On Player Ready
- 
- const onReady = (event) => {
-     setPlayer(event.target);
-     setIsPlayerReady(true);
- };
 
-    // Seek video at specific time 
-    const handleTimestampClick = (timestamp) => {
-      
-            // Convert the timestamp (in the format 'minutes:seconds') to seconds
-            const [minutes, seconds] = timestamp.split(":");
-            const totalSeconds = parseInt(minutes) * 60 + parseInt(seconds);
-
-            // Use the seekTo method to move the video to the desired timestamp
-            player.seekTo(totalSeconds);
-        
+    const onReady = (event) => {
+        setPlayer(event.target);
+        setIsPlayerReady(true);
     };
-   
+
+    // Seek video at specific time
+    const handleTimestampClick = (timestamp) => {
+        // Convert the timestamp (in the format 'minutes:seconds') to seconds
+        const [minutes, seconds] = timestamp.split(":");
+        const totalSeconds = parseInt(minutes) * 60 + parseInt(seconds);
+
+        // Use the seekTo method to move the video to the desired timestamp
+        player.seekTo(totalSeconds);
+    };
+
     useEffect(() => {
         // Create two promises for the API calls
         const fetchNotesPromise = fetchNotesData();
@@ -199,7 +204,6 @@ const addNoteData = async (e) => {
             });
     }, [videoId]);
 
-    
     const compareNotesByTimestamp = (noteA, noteB) => {
         const timestampA = new Date(noteA.timestamp);
         const timestampB = new Date(noteB.timestamp);
@@ -215,7 +219,7 @@ const addNoteData = async (e) => {
         }
         return false; // Exclude notes with missing or empty title/text properties.
     });
-    
+
     return dataIsReady ? (
         <div className="flex lg:h-full md:h-full xl:h-full max-h-screen flex-col lg:flex-row xl:flex-row sm:overflow-y-auto lg:overflow-y-hidden xl:overflow-y-hidden overflow-y-auto">
             <div className="flex-[60%] ">
@@ -312,12 +316,18 @@ const addNoteData = async (e) => {
                                 setEditingNote(null);
                                 setIsEditing(false);
                             }}
+                            NoteId={editingNote.noteId}
                             initialText={editingNote.initialText}
                             initialTitle={editingNote.initialTitle}
                             initialTimestamp={editingNote.initialTimestamp}
-                            onSave={(newText, newTimestamp, newTitle) => {
+                            onSave={(
+                                NoteId,
+                                newText,
+                                newTimestamp,
+                                newTitle
+                            ) => {
                                 updateNoteData(
-                                    editingNote.noteId,
+                                    NoteId,
                                     newTitle,
                                     newText,
                                     newTimestamp
@@ -325,6 +335,12 @@ const addNoteData = async (e) => {
                                 setEditingNote(null);
                                 setIsEditing(false);
                             }}
+                        />
+                    ) : isCardOpen ? (
+                        <NoteCard
+                            title={selectedNote.title}
+                            text={selectedNote.text}
+                            onClose={() => setIsCardOpen(false)}
                         />
                     ) : (
                         <ul className="flex flex-col pl-2 h-[100%] max-h-max overflow-y-auto">
@@ -343,8 +359,10 @@ const addNoteData = async (e) => {
                                                         )
                                                     )
                                                 }
+                                                className="text-xl font-bold"
                                             >
                                                 {note.title}
+                                                <div className="border-b border-gray-300 w-[80%] mx-auto my-2"></div>
                                             </p>
                                         </div>
                                         <div className="flex justify-between">
@@ -362,9 +380,27 @@ const addNoteData = async (e) => {
                                                     {formatTime(note.timestamp)}
                                                 </span>
                                             </strong>
-                                            <p>{note?.text}</p>
                                             <div>
-                                                <button>
+                                                {note?.text.length > 10 ? (
+                                                    <div>
+                                                        {note?.text.substring(
+                                                            0,
+                                                            10
+                                                        )}
+                                                        {note?.text.length > 10
+                                                            ? "..."
+                                                            : ""}
+                                                    </div>
+                                                ) : (
+                                                    <div>{note?.text}</div>
+                                                )}
+                                            </div>
+                                            <div>
+                                                <button
+                                                    onClick={() =>
+                                                        openNoteCard(note)
+                                                    }
+                                                >
                                                     <BsCardText />
                                                 </button>
                                                 <button
@@ -401,7 +437,7 @@ const addNoteData = async (e) => {
             </div>
         </div>
     ) : (
-        <NoteTakingAppSkeleton/>
+        <NoteTakingAppSkeleton />
     );
 };
 
