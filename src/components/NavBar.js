@@ -28,10 +28,10 @@ export const NavBar = ({ className }) => {
                 <ul className="md:flex hidden gap-4 items-center text-gray-600 absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     <li>
                         <a className="hover:underline" href="#footer">
-                           Connect
+                            Connect
                         </a>
                     </li>
-                  
+
                     <li>
                         <a className="hover:underline" href="#features">
                             Features
@@ -59,30 +59,22 @@ export const NavBar = ({ className }) => {
                         <li>
                             <a
                                 className="hover:underline"
-                                href="/#testimonials"
-                                onClick={toggleDropdown}
-                            >
-                                Community
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                className="hover:underline"
-                                href="/#pricing"
-                                onClick={toggleDropdown}
-                            >
-                                Pricing
-                            </a>
-                        </li>
-                        <li>
-                            <a
-                                className="hover:underline"
-                                href="/#features"
+                                href="#features"
                                 onClick={toggleDropdown}
                             >
                                 Features
                             </a>
                         </li>
+                        <li>
+                            <a
+                                className="hover:underline"
+                                href="#footer"
+                                onClick={toggleDropdown}
+                            >
+                               Connect
+                            </a>
+                        </li>
+                        
                     </ul>
                     <div className="flex justify-between items-center gap-8 fixed bottom-10 right-10">
                         <Link to="/sign-up">
