@@ -10,6 +10,7 @@ import UserTrackPlayList from "./components/UserTrackPlayLists";
 import LoginComponent from "./components/LoginComponent";
 import Register from "./components/Register";
 import PlaylistVideos from "./components/PlaylistVideos";
+import HomePage from "./pages/home-page"
 import { useSelector } from "react-redux";
 import TokenService from "./Services/token.service";
 
@@ -53,6 +54,10 @@ const appRouter = createBrowserRouter([
     {
         path: "/login",
         element: <LoginComponent />,
+    },
+    {
+        path: "/home",
+        element: <HomePage />,
     },
     {
         path: "/register",
