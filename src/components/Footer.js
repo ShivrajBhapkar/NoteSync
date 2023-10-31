@@ -46,28 +46,43 @@ const Footer = () => {
                         </h3>
                         <ul className="grid gap-2 text-gray-500 sm:text-base text-lg">
                             <li>
-                                <a className="hover:underline" href="/#">
+                                <a
+                                    className="hover:underline"
+                                    href="https://github.com/ShivrajBhapkar"
+                                    target="_blank"
+                                >
                                     Github
                                 </a>
                             </li>
                             <li>
-                                <a className="hover:underline" href="/#">
+                                <a
+                                    className="hover:underline"
+                                    href="https://www.linkedin.com/in/shivraj-bhapkar102/"
+                                    target="_blank"
+                                >
                                     LinkedIn
                                 </a>
                             </li>
                             <li>
-                                <a className="hover:underline" href="/#">
+                                <a
+                                    className="hover:underline"
+                                    href="https://twitter.com/Dev_Shivraj"
+                                    target="_blank"
+                                >
                                     Twitter
                                 </a>
                             </li>
                             <li>
-                                <a className="hover:underline" href="/#">
+                                <a
+                                    className="hover:underline"
+                                    href="https://www.instagram.com/dev_shivraj_102/"
+                                    target="_blank"
+                                >
                                     Instagram
                                 </a>
                             </li>
                         </ul>
                     </div>
-                  
                 </div>
             </div>
         </Section>

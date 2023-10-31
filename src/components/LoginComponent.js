@@ -1,19 +1,18 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { useNavigate, Navigate } from "react-router-dom";
 import { login } from "../Services/auth";
+import TokenService from "../Services/token.service";
 const LoginComponent = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const user = TokenService.getUser();
     const navigate = useNavigate(); 
-    const userId = useSelector((store) => store.authentication.userId);
-
-    if (userId !== null) {
+    if (user && user.userId) {
         return <Navigate to="/" replace />;
     }
     const handleLogin = async() => {
         await login(email, password);
-        navigate("/")
+        navigate("/dashboard")
     };
 
     return (    

@@ -10,27 +10,30 @@ import UserTrackPlayList from "./components/UserTrackPlayLists";
 import LoginComponent from "./components/LoginComponent";
 import Register from "./components/Register";
 import PlaylistVideos from "./components/PlaylistVideos";
-import HomePage from "./pages/home-page"
-import { useSelector } from "react-redux";
+import HomePage from "./pages/home-page";
+
 import TokenService from "./Services/token.service";
 
-  const ProtectedRoute = ({ element, ...rest }) => {
-      const user = TokenService.getUser();
-      if (user && user.userId) {
-          return element;
-      } else {
-          return <Navigate to="/login" />;
-      }
-  };
-
+const ProtectedRoute = ({ element, ...rest }) => {
+    const user = TokenService.getUser();
+    if (user && user.userId) {
+        return element;
+    } else {
+        return <Navigate to="/login" />;
+    }
+};
 
 const appRouter = createBrowserRouter([
     {
-        path: "/",
-        element: <Body />,
+        path: "/", // Change the path to the new root path "/"
+        element: <HomePage />, // Render the HomePage component
+    },
+    {
+        path: "/dashboard", // Define a new /dashboard route
+        element: <Body />, // Render the Body component
         children: [
             {
-                path: "/",
+                path: "/dashboard",
                 element: <ProtectedRoute element={<UserTrackPlayList />} />,
             },
             {
@@ -46,7 +49,7 @@ const appRouter = createBrowserRouter([
                 element: <ProtectedRoute element={<UserUnTrackPlayList />} />,
             },
             {
-                path: "/playlist/:playlistId",
+                path: "playlist/:playlistId",
                 element: <ProtectedRoute element={<PlaylistVideos />} />,
             },
         ],
@@ -54,10 +57,6 @@ const appRouter = createBrowserRouter([
     {
         path: "/login",
         element: <LoginComponent />,
-    },
-    {
-        path: "/home",
-        element: <HomePage />,
     },
     {
         path: "/register",

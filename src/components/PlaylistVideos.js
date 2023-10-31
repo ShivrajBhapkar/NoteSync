@@ -74,7 +74,7 @@ const PlaylistVideos = () => {
                     {videos.map((video, index) => (
                         <div className="border-solid border-2 border-grey-200" key={video.videoId}>
                             <Link
-                                to={`/watch/${playlistId}/${video.videoId}`}
+                                to={`/dashboard/watch/${playlistId}/${video.videoId}`}
                                 key={video.videoId}
                             >
                                 <div className="bg-white rounded-lg p-2 shadow-md">

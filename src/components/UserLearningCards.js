@@ -8,8 +8,17 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
     const { userId } = tokenService.getUser();
     const navigate = useNavigate();
 
-    const navigateToPlaylist = () => {
-        navigate(`/playlist/${playlistInfo.playlistId}`);
+    const handleButtonClick = async (playlistId) => {
+        try {
+            // Perform any necessary operations, e.g., fetching data or validation
+            // before navigating.
+
+            // Assuming you have the playlistId to navigate to
+            navigate(`playlist/${playlistId}`);
+        } catch (error) {
+            console.error("Error during navigation:", error);
+            // You can handle the error here, e.g., show a message to the user.
+        }
     };
 
     const untrackPlaylist = () => {
@@ -19,7 +28,7 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
         axios
             .delete(deleteUrl, { data: requestBody })
             .then((response) => {
-                navigate("/");
+                navigate("/untrack");
             })
             .catch((error) => {
                 console.error("Error untracking playlist: ", error);
@@ -42,7 +51,9 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
                 </ul>
                 <div className="mt-2  flex sm:flex-row md:flex-row lg:flex-row xl:flex-row flex-col">
                     <Button
-                        onClick={navigateToPlaylist}
+                        onClick={() =>
+                            handleButtonClick(playlistInfo.playlistId)
+                        }
                         label="Continue"
                         action="primary"
                     />

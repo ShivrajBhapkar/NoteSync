@@ -10,12 +10,12 @@ const links = [
     {
         label: "Playlists",
         icon: <MdPlaylistAddCheck size={25} />,
-        href: "/",
+        href: "/dashboard",
     },
     {
         label: "Untrack Playlists",
         icon: <MdPlaylistRemove size={25} />,
-        href: "/untrack",
+        href: "untrack",
     },
 ];
 const Sidebar = () => {

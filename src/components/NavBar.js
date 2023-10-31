@@ -2,15 +2,13 @@ import React, { useState } from "react";
 
 import { Link } from "react-router-dom";
 import { ButtonLink } from "../components/ui/ButtonLink";
-
+import tokenService from "../Services/token.service";
 import { ReactComponent as HamburgerMenu } from "../assets/hamburger-menu.svg";
-
-
 
 export const NavBar = ({ className }) => {
     const [dropdownIsShown, setDropdownIsShown] = useState(false);
     const toggleDropdown = () => setDropdownIsShown(!dropdownIsShown);
-
+    const { userId } = tokenService.getUser();
     document.body.className = dropdownIsShown
         ? "overflow-hidden"
         : "overflow-auto";
@@ -38,14 +36,16 @@ export const NavBar = ({ className }) => {
                         </a>
                     </li>
                 </ul>
-                <div className="md:flex hidden items-center gap-8">
-                    <Link to="/sign-up">
-                        <h3 className="font-bold text-lg hover:underline">
-                            Sign In
-                        </h3>
-                    </Link>
-                    <ButtonLink to="/sign-up">Sign Up</ButtonLink>
-                </div>
+                {!userId ? (
+                    <div className="md:flex hidden items-center gap-8">
+                        <Link to="/login">
+                            <h3 className="font-bold text-lg hover:underline">
+                                Sign In
+                            </h3>
+                        </Link>
+                        <ButtonLink to="/register">Sign Up</ButtonLink>
+                    </div>
+                ) : null}
                 <div className="md:hidden">
                     <HamburgerMenu
                         onClick={toggleDropdown}
@@ -71,10 +71,9 @@ export const NavBar = ({ className }) => {
                                 href="#footer"
                                 onClick={toggleDropdown}
                             >
-                               Connect
+                                Connect
                             </a>
                         </li>
-                        
                     </ul>
                     <div className="flex justify-between items-center gap-8 fixed bottom-10 right-10">
                         <Link to="/sign-up">
