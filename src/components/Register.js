@@ -3,6 +3,9 @@ import axios from "../axios-config"
 import { useSelector } from "react-redux";
 import { useNavigate, Navigate } from "react-router-dom";
 import TokenService from "../Services/token.service";
+import { Formik, Field, Form, ErrorMessage } from "formik";
+import * as Yup from "yup";
+
 function Register() {
    const [name, setName] = useState("");
    const [email, setEmail] = useState("");
@@ -12,7 +15,22 @@ function Register() {
 
  if (userId !== null) {
      return <Navigate to="/" replace />;
- }
+    }
+    const validationSchema = Yup.object().shape({
+        name: Yup.string()
+            .min(5, "Name must be at least 5 characters")
+            .required("Name is required"),
+        email: Yup.string()
+            .email("Invalid email address")
+            .required("Email is required"),
+        password: Yup.string()
+            .matches(
+                /^(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+                "Password must contain at least 8 characters with one special character"
+            )
+            .required("Password is required"),
+    });
+
    const handleRegister = async (e) => {
        e.preventDefault();
        const userData = { name, email, password };
@@ -47,51 +65,93 @@ function Register() {
 
     return (
         <main className="mx-auto flex min-h-screen w-full items-center justify-center bg-gray-900 text-white">
-            <section className="flex w-[30rem] flex-col space-y-10">
-                <div className="text-center text-4xl font-medium">Register</div>
-
-                <div className="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
-                    <input
-                        type="text"
-                        placeholder="Name"
-                        value={name}
-                        onChange={(e) => setName(e.target.value)}
-                        className="w-full border-none bg-transparent outline-none placeholder-italic focus:outline-none"
-                    />
-                </div>
-
-                <div className="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
-                    <input
-                        type="text"
-                        placeholder="Email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        className="w-full border-none bg-transparent outline-none placeholder-italic focus:outline-none"
-                    />
-                </div>
-
-                <div className="w-full transform border-b-2 bg-transparent text-lg duration-300 focus-within:border-indigo-500">
-                    <input
-                        type="password"
-                        placeholder="Password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full border-none bg-transparent outline-none placeholder-italic focus:outline-none"
-                    />
-                </div>
-
-                <button
-                    onClick={handleRegister}
-                    className="transform rounded-sm bg-indigo-600 py-2 font-bold duration-300 hover:bg-indigo-400"
+            <section className="w-96 flex flex-col space-y-4 p-4 rounded-lg shadow-md">
+                <div className="text-center text-2xl font-medium">Register</div>
+                <Formik
+                    initialValues={{
+                        name: "",
+                        email: "",
+                        password: "",
+                    }}
+                    validationSchema={validationSchema}
+                    onSubmit={handleRegister}
                 >
-                    REGISTER
-                </button>
+                    {() => (
+                        <Form className="space-y-4">
+                            <div>
+                                <label
+                                    htmlFor="name"
+                                    className="text-sm font-medium"
+                                >
+                                    Name
+                                </label>
+                                <Field
+                                    type="text"
+                                    name="name"
+                                    placeholder="Name"
+                                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
+                                />
+                                <ErrorMessage
+                                    name="name"
+                                    component="div"
+                                    className="text-red-500 text-sm"
+                                />
+                            </div>
 
-                <p className="text-center text-lg">
-                    Already have an account?
+                            <div>
+                                <label
+                                    htmlFor="email"
+                                    className="text-sm font-medium"
+                                >
+                                    Email
+                                </label>
+                                <Field
+                                    type="text"
+                                    name="email"
+                                    placeholder="Email"
+                                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
+                                />
+                                <ErrorMessage
+                                    name="email"
+                                    component="div"
+                                    className="text-red-500 text-sm"
+                                />
+                            </div>
+
+                            <div>
+                                <label
+                                    htmlFor="password"
+                                    className="text-sm font-medium"
+                                >
+                                    Password
+                                </label>
+                                <Field
+                                    type="password"
+                                    name="password"
+                                    placeholder="Password"
+                                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
+                                />
+                                <ErrorMessage
+                                    name="password"
+                                    component="div"
+                                    className="text-red-500 text-sm"
+                                />
+                            </div>
+
+                            <button
+                                type="submit"
+                                className="w-full py-2 bg-indigo-600 text-white font-bold rounded-md hover:bg-indigo-400"
+                            >
+                                REGISTER
+                            </button>
+                        </Form>
+                    )}
+                </Formik>
+                <p className="text-center text-sm">
+                    Already have an account?{" "}
                     <a
                         href="/login"
-                        className="font-medium text-indigo-500 underline-offset-4 hover:underline"
+                        className="text-indigo-500 hover:underline"
                     >
                         Log In
                     </a>

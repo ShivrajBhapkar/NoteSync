@@ -29,8 +29,8 @@ const appRouter = createBrowserRouter([
         element: <HomePage />, // Render the HomePage component
     },
     {
-        path: "/dashboard", // Define a new /dashboard route
-        element: <Body />, // Render the Body component
+        path: "/dashboard", 
+        element: <Body />, 
         children: [
             {
                 path: "/dashboard",

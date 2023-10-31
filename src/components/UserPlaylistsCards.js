@@ -41,7 +41,7 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
 
             // On success, display the success message and navigate
             notifyme("Playlist added to learning successfully");
-            navigate("/");
+            navigate("/dashboard");
         } catch (error) {
             console.error("Error adding playlist to learning:", error);
         } finally {

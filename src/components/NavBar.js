@@ -8,7 +8,7 @@ import { ReactComponent as HamburgerMenu } from "../assets/hamburger-menu.svg";
 export const NavBar = ({ className }) => {
     const [dropdownIsShown, setDropdownIsShown] = useState(false);
     const toggleDropdown = () => setDropdownIsShown(!dropdownIsShown);
-    const { userId } = tokenService.getUser();
+    const user = tokenService.getUser();
     document.body.className = dropdownIsShown
         ? "overflow-hidden"
         : "overflow-auto";
@@ -36,7 +36,7 @@ export const NavBar = ({ className }) => {
                         </a>
                     </li>
                 </ul>
-                {!userId ? (
+                {!user ? (
                     <div className="md:flex hidden items-center gap-8">
                         <Link to="/login">
                             <h3 className="font-bold text-lg hover:underline">

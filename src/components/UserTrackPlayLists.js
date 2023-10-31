@@ -43,9 +43,9 @@ const UserUnTrackPlayList = () => {
                         <ActionModel
                             title="It seems like you have not started learning yet."
                             subtitle="Let's start your learning by clicking on button below."
-                            buttonText="Get Started"
+                            label="Get Started"
                             action={() => {
-                                navigate("/untrack");
+                                navigate("untrack");
                             }}
                         />
                     ) : (

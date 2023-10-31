@@ -7,8 +7,9 @@ import { ReactComponent as Star } from "../assets/start.svg";
 import { Section } from "../components/ui/Section";
 import { NavBar } from "../components/NavBar";
 import { ButtonLink } from "../components/ui/ButtonLink";
-
+import tokenService from "../Services/token.service";
 const Hero = () => {
+    const user = tokenService.getUser(); 
     return (
         <Section as="header" className="bg-yellow-50">
             <NavBar />
@@ -23,7 +24,7 @@ const Hero = () => {
                     </p>
                     <div className="flex sm:flex-row flex-col items-center sm:gap-8 gap-4 relative">
                         <ButtonLink
-                            to="/sign-up"
+                            to={user !== null? "/dashboard" : "/login"}
                             className="md:max-w-max w-full"
                             stretch
                         >
