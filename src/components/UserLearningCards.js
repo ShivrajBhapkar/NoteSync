@@ -1,5 +1,5 @@
 import React from "react";
-import { useSelector } from "react-redux";
+
 import axios from "../axios-config";
 import { useNavigate } from "react-router-dom";
 import Button from "./ui/Button";
@@ -10,14 +10,9 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
 
     const handleButtonClick = async (playlistId) => {
         try {
-            // Perform any necessary operations, e.g., fetching data or validation
-            // before navigating.
-
-            // Assuming you have the playlistId to navigate to
             navigate(`playlist/${playlistId}`);
         } catch (error) {
             console.error("Error during navigation:", error);
-            // You can handle the error here, e.g., show a message to the user.
         }
     };
 

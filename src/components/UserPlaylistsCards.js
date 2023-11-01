@@ -1,17 +1,15 @@
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
-import axios from "../axios-config"; // Import your Axios instance
-import { useNavigate, Navigate } from "react-router-dom"; // Import useNavigate for navigation
+import axios from "../axios-config";
+import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import TokenService from "../Services/token.service";
 import "react-toastify/dist/ReactToastify.css";
 import LoadingButton from "./LoadingButton";
 const UserPlaylistsCards = ({ playlistInfo }) => {
-    const userId = useSelector((store) => store.authentication.userId);
     const user = TokenService.getUser();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false); // Add loading state
-    const [animation, setAnimation] = useState(false);
+    const [loading, setLoading] = useState(false);
+    const [setAnimation] = useState(false);
     function notifyme(msg) {
         const notify = () =>
             toast.info(msg, {

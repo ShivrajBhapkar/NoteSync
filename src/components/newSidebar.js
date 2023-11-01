@@ -1,9 +1,8 @@
-import React from "react";
-
-import { useNavigate , NavLink} from "react-router-dom";
-import {
-    FaSignOutAlt,
-} from "react-icons/fa";
+import React, { useState } from "react";
+import Button from "./ui/Button";
+import { useNavigate, NavLink, Link } from "react-router-dom";
+import { FaUser } from "react-icons/fa";
+import { FaSignOutAlt } from "react-icons/fa";
 import { logout } from "../Services/auth";
 import { MdPlaylistAddCheck, MdPlaylistRemove } from "react-icons/md";
 const links = [
@@ -20,13 +19,28 @@ const links = [
 ];
 const Sidebar = () => {
     const navigate = useNavigate();
-    const handleLogin = async () => {
+    const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
+
+    const openLogoutModal = () => {
+        setLogoutModalOpen(true);
+    };
+
+    const closeLogoutModal = () => {
+        setLogoutModalOpen(false);
+    };
+    const handleLogout = async () => {
         await logout();
-        navigate("/login")
+        closeLogoutModal();
+        navigate("/login");
     };
     return (
         <aside className="shadow-lg  bg-[#1c212c]  flex flex-col  text-white  pt-5 border-collapse h-full">
             <div className="flex flex-col justify-between h-[100%]">
+                <Link to="/">
+                    <h3 className="sm:font-bold font-extrabold sm:text-lg text-2xl p-4  text-indigo-500">
+                        NoteSync
+                    </h3>
+                </Link>
                 <div className="flex flex-col space-y-7 mt-6 flex-[60%] items-start justify-start ">
                     {links.map((link, index) => (
                         <NavLink key={index} to={link.href} className="w-full">
@@ -38,14 +52,46 @@ const Sidebar = () => {
                 <div className="flex  items-center flex-[30%] justify-center">
                     <button
                         className="flex w-[90%] text-red-500 space-x-2 items-center p-2"
-                        onClick={handleLogin}
+                        onClick={openLogoutModal}
                     >
                         <FaSignOutAlt />
                         <span className="text-red-500">Log out</span>
                     </button>
                 </div>
+                {isLogoutModalOpen && (
+                    <LogoutModal
+                        onConfirm={handleLogout}
+                        onCancel={closeLogoutModal}
+                    />
+                )}
             </div>
         </aside>
+    );
+};
+const LogoutModal = ({ onConfirm, onCancel }) => {
+    return (
+        <div className="fixed inset-0 flex items-center justify-center z-50">
+            <div className="modal-overlay fixed inset-0 bg-gray-600 opacity-50"></div>
+            <div className="modal-container bg-white w-1/3 rounded-lg shadow-lg p-8 relative">
+                <p className="text-lg mb-4 text-gray-800">
+                    Are you sure you want to log out?
+                </p>
+                <div className="flex justify-end">
+                    <Button
+                        onClick={onConfirm}
+                        label="Confirm"
+                        action="secondary"
+                    />
+                    <Button
+                        onClick={onCancel}
+                        label="Cancel"
+                       action="primary"
+                    />
+                       
+                    
+                </div>
+            </div>
+        </div>
     );
 };
 

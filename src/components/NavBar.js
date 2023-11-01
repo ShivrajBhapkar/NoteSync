@@ -75,14 +75,16 @@ export const NavBar = ({ className }) => {
                             </a>
                         </li>
                     </ul>
-                    <div className="flex justify-between items-center gap-8 fixed bottom-10 right-10">
-                        <Link to="/sign-up">
-                            <h3 className="font-bold text-lg hover:underline">
-                                Sign In
-                            </h3>
-                        </Link>
-                        <ButtonLink to="/sign-up">Sign Up</ButtonLink>
-                    </div>
+                    {!user ? (
+                        <div className="flex justify-between items-center gap-8 fixed bottom-10 right-10">
+                            <Link to="/sign-up">
+                                <h3 className="font-bold text-lg hover:underline">
+                                    Sign In
+                                </h3>
+                            </Link>
+                            <ButtonLink to="/sign-up">Sign Up</ButtonLink>
+                        </div>
+                    ) : null}
                 </div>
             )}
         </>
