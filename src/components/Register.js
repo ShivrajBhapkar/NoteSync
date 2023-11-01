@@ -3,16 +3,15 @@ import axios from "../axios-config"
 import { useSelector } from "react-redux";
 import { useNavigate, Navigate } from "react-router-dom";
 import TokenService from "../Services/token.service";
-import { Formik, Field, Form, ErrorMessage } from "formik";
+import { Formik, Field, Form, ErrorMessage} from "formik";
 import * as Yup from "yup";
 
 function Register() {
-   const [name, setName] = useState("");
-   const [email, setEmail] = useState("");
-   const [password, setPassword] = useState("");
+//    const [name, setName] = useState("");
+//    const [email, setEmail] = useState("");
+//    const [password, setPassword] = useState("");
  const navigate = useNavigate();
  const userId = useSelector((store) => store.authentication.userId);
-
  if (userId !== null) {
      return <Navigate to="/" replace />;
     }
@@ -31,12 +30,9 @@ function Register() {
             .required("Password is required"),
     });
 
-   const handleRegister = async (e) => {
-       e.preventDefault();
-       const userData = { name, email, password };
-
+   const handleRegister = async (values) => {
        try {
-           const response = await axios.post("/auth/register", userData);
+           const response = await axios.post("/auth/register", values);
 
            if (response.status === 201) {
                const { tokens, user } = response.data;
@@ -54,7 +50,7 @@ function Register() {
                } else {
                    console.error("Invalid tokens or user ID");
                }
-                navigate("/");
+               navigate("/");
            } else {
                console.error("Registration failed");
            }
@@ -75,8 +71,9 @@ function Register() {
                     }}
                     validationSchema={validationSchema}
                     onSubmit={handleRegister}
+                    validateOnMount
                 >
-                    {() => (
+                    {({ isValid, dirty, isSubmitting }) => (
                         <Form className="space-y-4">
                             <div>
                                 <label
@@ -89,7 +86,7 @@ function Register() {
                                     type="text"
                                     name="name"
                                     placeholder="Name"
-                                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
+                                    className="w-full px-4 py-2 text-black rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
                                 />
                                 <ErrorMessage
                                     name="name"
@@ -109,7 +106,7 @@ function Register() {
                                     type="text"
                                     name="email"
                                     placeholder="Email"
-                                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
+                                    className="w-full text-black px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
                                 />
                                 <ErrorMessage
                                     name="email"
@@ -129,7 +126,7 @@ function Register() {
                                     type="password"
                                     name="password"
                                     placeholder="Password"
-                                    className="w-full px-4 py-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
+                                    className="w-full px-4 text-black py-2 rounded-md border border-gray-300 focus:outline-none focus:border-indigo-500"
                                 />
                                 <ErrorMessage
                                     name="password"
@@ -140,7 +137,11 @@ function Register() {
 
                             <button
                                 type="submit"
-                                className="w-full py-2 bg-indigo-600 text-white font-bold rounded-md hover:bg-indigo-400"
+                                className={`${
+                                    !isValid || !dirty || isSubmitting
+                                        ? "opacity-50 pointer-events-none bg-blue-300"
+                                        : "bg-blue-500 hover:bg-blue-700 text-white"
+                                } px-4 py-2 rounded-md w-full`}
                             >
                                 REGISTER
                             </button>
