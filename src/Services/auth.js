@@ -1,7 +1,7 @@
 
 import axios from "../axios-config";
 import TokenService from "./token.service";
-export const login = async (email, password) => {
+export const login = async ({ email, password }) => {
     
     try {
         const response = await axios.post("/auth/login", {

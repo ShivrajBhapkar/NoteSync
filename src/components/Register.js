@@ -16,7 +16,7 @@ function Register() {
      return <Navigate to="/" replace />;
     }
     const validationSchema = Yup.object().shape({
-        name: Yup.string()
+        name: Yup.string().trim()
             .min(5, "Name must be at least 5 characters")
             .required("Name is required"),
         email: Yup.string()
