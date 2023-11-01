@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import axios from "../axios-config";
-import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import axios from "../axios-config"; // Import your Axios instance
+import { useNavigate } from "react-router-dom"; // Import useNavigate for navigation
 import { toast } from "react-toastify";
 import TokenService from "../Services/token.service";
 import "react-toastify/dist/ReactToastify.css";
@@ -8,13 +9,13 @@ import LoadingButton from "./LoadingButton";
 const UserPlaylistsCards = ({ playlistInfo }) => {
     const user = TokenService.getUser();
     const navigate = useNavigate();
-    const [loading, setLoading] = useState(false);
-    const [setAnimation] = useState(false);
+    const [loading, setLoading] = useState(false); // Add loading state
+    const [animation, setAnimation] = useState(false);
     function notifyme(msg) {
         const notify = () =>
             toast.info(msg, {
                 position: "top-center",
-                autoClose: 9000,
+                autoClose: 2000,
                 hideProgressBar: false,
                 closeOnClick: true,
                 pauseOnHover: true,

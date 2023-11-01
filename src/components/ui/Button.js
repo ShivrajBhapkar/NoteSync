@@ -9,7 +9,7 @@ const Button = ({ onClick, label, action }) => {
     };
 
     // Determine the style based on the action prop
-    const styleClasses = buttonStyles[action] || "normal"; // Default to an empty string if the action is not recognized
+    const styleClasses = buttonStyles[action] || "normal";
 
     return (
         <button onClick={onClick} className={styleClasses}>

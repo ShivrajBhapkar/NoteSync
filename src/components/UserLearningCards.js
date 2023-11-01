@@ -1,13 +1,21 @@
-import React from "react";
+import React, { useState } from "react";
 
 import axios from "../axios-config";
 import { useNavigate } from "react-router-dom";
 import Button from "./ui/Button";
 import tokenService from "../Services/token.service";
+import AlertModel from "./ui/AlertModel";
 const UserPlaylistsCards = ({ playlistInfo }) => {
     const { userId } = tokenService.getUser();
+    const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
     const navigate = useNavigate();
+    const openLogoutModal = () => {
+        setLogoutModalOpen(true);
+    };
 
+    const closeLogoutModal = () => {
+        setLogoutModalOpen(false);
+    };
     const handleButtonClick = async (playlistId) => {
         try {
             navigate(`playlist/${playlistId}`);
@@ -23,7 +31,7 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
         axios
             .delete(deleteUrl, { data: requestBody })
             .then((response) => {
-                navigate("/untrack");
+                navigate("untrack");
             })
             .catch((error) => {
                 console.error("Error untracking playlist: ", error);
@@ -54,11 +62,19 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
                     />
 
                     <Button
-                        onClick={untrackPlaylist}
+                        onClick={openLogoutModal}
                         label="Untrack"
                         action="secondary"
                     />
                 </div>
+                {isLogoutModalOpen && (
+                    <AlertModel
+                        onConfirm={untrackPlaylist}
+                        onCancel={closeLogoutModal}
+                        label="Are you sure want to untrack playlist?"
+                        sublabel="Your are notes and records will get deleted."
+                    />
+                )}
             </div>
         </div>
     );

@@ -11,7 +11,7 @@ const PlaylistVideos = () => {
     const [error, setError] = useState(null); // New state for error handling
     const { playlistId } = useParams();
     const { userId } = tokenService.getUser();
-      const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState(true);
     useEffect(() => {
         // First API call to fetch playlist info
         axios
@@ -31,7 +31,7 @@ const PlaylistVideos = () => {
             .get(`/users/${userId}/playlist/${playlistId}/videos`)
             .then((videoResponse) => {
                 setVideos(videoResponse.data);
-                setLoading(false); 
+                setLoading(false);
             })
             .catch((videoError) => {
                 console.error("Error fetching videos:", videoError);
@@ -40,13 +40,12 @@ const PlaylistVideos = () => {
     }, [userId, playlistId]);
 
     // Check for errors and display an error message
-      if (loading) {
-          return <PlaylistVideosSkeleton />;
-      }
+    if (loading) {
+        return <PlaylistVideosSkeleton />;
+    }
     if (error) {
         return <div>{error}</div>;
     }
-
 
     // Once both API requests complete, or in the initial state, the UI will be rendered
     return (
@@ -70,9 +69,12 @@ const PlaylistVideos = () => {
             <div className="lg:w-2/3 xl:w-2/3 p-4 lg:overflow-y-auto xl:overflow-y-auto space-y-2 ">
                 <h2 className="text-2xl font-semibold">Videos</h2>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mt-4 lg:w-full xl:w-full md:w-full ">
-                    {videos.map((video, index) => (
-                        <div className="border-solid border-2 border-grey-200" key={video.videoId}>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mt-4 lg:w-full xl:w-full md:w-full">
+                    {videos.map((video) => (
+                        <div
+                            className="border-solid border-2 border-grey-200"
+                            key={video.videoId}
+                        >
                             <Link
                                 to={`/dashboard/watch/${playlistId}/${video.videoId}`}
                                 key={video.videoId}
@@ -81,7 +83,7 @@ const PlaylistVideos = () => {
                                     <img
                                         src={video.videoImageURL}
                                         alt={video.videoTitle}
-                                        className="lg:w-full xl:w-full md:w-full w-[60%] mx-auto h-40 object-cover rounded-lg"
+                                        className="lg:w-full xl:w-full md:w-full w-[60%] mx-auto h-44 object-cover rounded-lg"
                                     />
                                     <p className="text-sm  text-center  font-semibold mt-2 overflow-hidden overflow-ellipsis whitespace-nowrap">
                                         {video.videoTitle}

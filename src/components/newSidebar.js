@@ -5,6 +5,7 @@ import { FaUser } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import { logout } from "../Services/auth";
 import { MdPlaylistAddCheck, MdPlaylistRemove } from "react-icons/md";
+import AlertModel from "./ui/AlertModel";
 const links = [
     {
         label: "Playlists",
@@ -37,9 +38,9 @@ const Sidebar = () => {
         <aside className="shadow-lg  bg-[#1c212c]  flex flex-col  text-white  pt-5 border-collapse h-full">
             <div className="flex flex-col justify-between h-[100%]">
                 <Link to="/">
-                    <h3 className="sm:font-bold font-extrabold sm:text-lg text-2xl p-4  text-indigo-500">
+                    <h1 className="sm:font-bold font-extrabold sm:text-lg md:text-2xl lg:text-2xl xl:text-2xl text-2xl p-4 text-indigo-500">
                         NoteSync
-                    </h3>
+                    </h1>
                 </Link>
                 <div className="flex flex-col space-y-7 mt-6 flex-[60%] items-start justify-start ">
                     {links.map((link, index) => (
@@ -59,9 +60,10 @@ const Sidebar = () => {
                     </button>
                 </div>
                 {isLogoutModalOpen && (
-                    <LogoutModal
+                    <AlertModel
                         onConfirm={handleLogout}
                         onCancel={closeLogoutModal}
+                        label="Are you sure want to logout?"
                     />
                 )}
             </div>
@@ -85,10 +87,8 @@ const LogoutModal = ({ onConfirm, onCancel }) => {
                     <Button
                         onClick={onCancel}
                         label="Cancel"
-                       action="primary"
+                        action="primary"
                     />
-                       
-                    
                 </div>
             </div>
         </div>
