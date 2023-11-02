@@ -159,24 +159,24 @@ const NoteTakingApp = () => {
             }
         },
     });
-    const addNoteData = async (e) => {
-        e.preventDefault();
-        if (player) {
-            const currentTime = player.getCurrentTime();
-            const isoTimestamp = new Date(currentTime * 1000).toISOString();
-            const newNote = {
-                title: noteTitle,
-                timestamp: isoTimestamp,
-                text: noteText,
-            };
-            dispatch(
-                createNoteUtil({ userId, playlistId, videoId, newNote })
-            ).then(() => {
-                setNoteText("");
-                setNoteTitle("");
-            });
-        }
-    };
+    // const addNoteData = async (e) => {
+    //     e.preventDefault();
+    //     if (player) {
+    //         const currentTime = player.getCurrentTime();
+    //         const isoTimestamp = new Date(currentTime * 1000).toISOString();
+    //         const newNote = {
+    //             title: noteTitle,
+    //             timestamp: isoTimestamp,
+    //             text: noteText,
+    //         };
+    //         dispatch(
+    //             createNoteUtil({ userId, playlistId, videoId, newNote })
+    //         ).then(() => {
+    //             setNoteText("");
+    //             setNoteTitle("");
+    //         });
+    //     }
+    // };
 
     // Update Note Handle
     const handleEditNoteClick = (
