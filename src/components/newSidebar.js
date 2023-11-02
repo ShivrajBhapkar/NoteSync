@@ -70,30 +70,7 @@ const Sidebar = () => {
         </aside>
     );
 };
-const LogoutModal = ({ onConfirm, onCancel }) => {
-    return (
-        <div className="fixed inset-0 flex items-center justify-center z-50">
-            <div className="modal-overlay fixed inset-0 bg-gray-600 opacity-50"></div>
-            <div className="modal-container bg-white w-1/3 rounded-lg shadow-lg p-8 relative">
-                <p className="text-lg mb-4 text-gray-800">
-                    Are you sure you want to log out?
-                </p>
-                <div className="flex justify-end">
-                    <Button
-                        onClick={onConfirm}
-                        label="Confirm"
-                        action="secondary"
-                    />
-                    <Button
-                        onClick={onCancel}
-                        label="Cancel"
-                        action="primary"
-                    />
-                </div>
-            </div>
-        </div>
-    );
-};
+
 
 const MenuItem = ({ icon, text }) => {
     return (
