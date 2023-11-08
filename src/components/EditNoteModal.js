@@ -1,19 +1,11 @@
 import React, { useState, useEffect } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-const EditNoteModal = ({
-    isOpen,
-    onClose,
-    NoteId,
-    initialText,
-    initialTitle,
-    initialTimestamp,
-    onSave,
-}) => {
+const EditNoteModal = ({ isOpen, onClose, note, onNoteUpdate }) => {
     const formik = useFormik({
         initialValues: {
-            noteTitle: initialTitle,
-            noteText: initialText,
+            noteTitle: note.title,
+            noteText: note.text,
         },
         validationSchema: Yup.object({
             noteTitle: Yup.string()
@@ -26,7 +18,12 @@ const EditNoteModal = ({
                 .required("Note text is required"),
         }),
         onSubmit: (values) => {
-            onSave(NoteId, values.noteText, initialTimestamp, values.noteTitle);
+            onNoteUpdate(
+                note._id,
+                values.noteTitle,
+                values.noteText,
+                note.timestamp
+            );
             onClose();
         },
     });

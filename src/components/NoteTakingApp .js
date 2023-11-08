@@ -10,7 +10,6 @@ import {
 import NoteForm from "./NoteForm";
 import { useParams } from "react-router-dom";
 import EditNoteModal from "./EditNoteModal";
-import { BiSolidSend } from "react-icons/bi";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import tokenService from "../Services/token.service";
 import { BsCardText } from "react-icons/bs";
@@ -19,8 +18,6 @@ import { fetchVideoInfo } from "../Services/noteServices";
 import NoteTakingAppSkeleton from "./NoteTakingAppSkeleton";
 import VideoInfo from "./VideoInfo";
 import NoteCard from "./NoteCard";
-import { useFormik } from "formik";
-import * as Yup from "yup";
 function formatTime(timeInSeconds) {
     if (timeInSeconds) {
         const timestampDate = new Date(timeInSeconds);
@@ -33,16 +30,6 @@ function formatTime(timeInSeconds) {
 }
 
 const NoteTakingApp = () => {
-    const validationSchema = Yup.object({
-        noteTitle: Yup.string()
-            .trim()
-            .min(5, "title must be at least 5 characters")
-            .required("Title is required"),
-        noteText: Yup.string()
-            .trim()
-            .min(30, "text must be atleast 30 characters")
-            .required("Note text is required"),
-    });
     const [player, setPlayer] = useState(null);
     const [dataIsReady, setDataIsReady] = useState(false);
     const [videoInfo, setVideoInfo] = useState([]);
@@ -55,10 +42,8 @@ const NoteTakingApp = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editingNote, setEditingNote] = useState(null);
     const notes = useSelector((state) => state.notes.data);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
-        useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
     const [selectedNoteToDelete, setSelectedNoteToDelete] = useState(null);
-
     const [isCardOpen, setIsCardOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
     const [playerDimensions, setPlayerDimensions] = useState({
@@ -146,44 +131,11 @@ const NoteTakingApp = () => {
             dispatch(createNoteUtil({ userId, playlistId, videoId, newNote }));
         }
     };
-    // const formik = useFormik({
-    //     initialValues: {
-    //         noteTitle: "",
-    //         noteText: "",
-    //     },
-    //     validationSchema,
-    //     onSubmit: (values) => {
-    //         if (player) {
-    //             const currentTime = player.getCurrentTime();
-    //             const isoTimestamp = new Date(currentTime * 1000).toISOString();
-    //             const newNote = {
-    //                 title: values.noteTitle,
-    //                 timestamp: isoTimestamp,
-    //                 text: values.noteText,
-    //             };
-    //             dispatch(
-    //                 createNoteUtil({ userId, playlistId, videoId, newNote })
-    //             ).then(() => {
-    //                 formik.resetForm();
-    //             });
-    //         }
-    //     },
-    // });
     // Update Note Handle
-    const handleEditNoteClick = (
-        noteId,
-        initialTitle,
-        initialText,
-        initialTimestamp
-    ) => {
-        setEditingNote({
-            noteId,
-            initialTitle,
-            initialText,
-            initialTimestamp,
-        });
-        setIsEditing(true);
-    };
+   const handleEditNoteClick = (note) => {
+       setSelectedNote(note);
+       setIsEditing(true);
+   };
 
     // Delete Note Model Handel
     const openDeleteConfirmationModalForNote = (noteId) => {
@@ -300,25 +252,23 @@ const NoteTakingApp = () => {
                                 setEditingNote(null);
                                 setIsEditing(false);
                             }}
-                            NoteId={editingNote.noteId}
-                            initialText={editingNote.initialText}
-                            initialTitle={editingNote.initialTitle}
-                            initialTimestamp={editingNote.initialTimestamp}
-                            onSave={(
-                                NoteId,
+                            note={selectedNote}
+                            onNoteUpdate={(
+                                noteId,
+                                newTitle,
                                 newText,
-                                newTimestamp,
-                                newTitle
+                                newTimestamp
                             ) => {
-                                updateNoteData(
-                                    NoteId,
-                                    newTitle,
-                                    newText,
-                                    newTimestamp
-                                );
-                                setEditingNote(null);
-                                setIsEditing(false);
+                               updateNoteData(
+                                   noteId,
+                                   newTitle,
+                                   newText,
+                                   newTimestamp
+                               );
+                               setEditingNote(null);
+                               setIsEditing(false);
                             }}
+                          
                         />
                     ) : isCardOpen ? (
                         <NoteCard
@@ -390,10 +340,7 @@ const NoteTakingApp = () => {
                                                 <button
                                                     onClick={() =>
                                                         handleEditNoteClick(
-                                                            note._id,
-                                                            note.title,
-                                                            note.text,
-                                                            note.timestamp
+                                                            note
                                                         )
                                                     }
                                                     className="text-blue-500 px-2 py-1 rounded-lg ml-2"
