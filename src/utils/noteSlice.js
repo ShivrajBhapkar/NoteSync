@@ -20,8 +20,12 @@ export const createNoteUtil = createAsyncThunk(
     "notes/createNote",
     async (params) => {
         await createNote(params);
-
-        return params.newNote;
+        console.log(params);
+        const userId = params.userId;
+        const playlistId = params.playlistId;
+        const videoId = params.videoId;
+        const response = await fetchNotes({userId , playlistId, videoId})
+        return response;
     }
 );
 
@@ -64,7 +68,7 @@ const notesSlice = createSlice({
                 state.error = action.error.message;
             })
             .addCase(createNoteUtil.fulfilled, (state, action) => {
-                state.data.push(action.payload);
+                 state.data = action.payload;
             })
             .addCase(updateNoteUtil.fulfilled, (state, action) => {
                 const noteIndex = state.data.findIndex(

@@ -45,8 +45,6 @@ const NoteTakingApp = () => {
     const [dataIsReady, setDataIsReady] = useState(false);
     const [videoInfo, setVideoInfo] = useState([]);
     const [isPlayerReady, setIsPlayerReady] = useState(false);
-    const [noteText, setNoteText] = useState("");
-    const [noteTitle, setNoteTitle] = useState("");
     const [searchQuery, setSearchQuery] = useState("");
     const { userId } = tokenService.getUser();
     const { playlistId } = useParams();
@@ -61,8 +59,6 @@ const NoteTakingApp = () => {
 
     const [isCardOpen, setIsCardOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
-
-    const playerRef = React.useRef(null);
     const [playerDimensions, setPlayerDimensions] = useState({
         width: "100%",
         height: "400px",
@@ -159,25 +155,6 @@ const NoteTakingApp = () => {
             }
         },
     });
-    // const addNoteData = async (e) => {
-    //     e.preventDefault();
-    //     if (player) {
-    //         const currentTime = player.getCurrentTime();
-    //         const isoTimestamp = new Date(currentTime * 1000).toISOString();
-    //         const newNote = {
-    //             title: noteTitle,
-    //             timestamp: isoTimestamp,
-    //             text: noteText,
-    //         };
-    //         dispatch(
-    //             createNoteUtil({ userId, playlistId, videoId, newNote })
-    //         ).then(() => {
-    //             setNoteText("");
-    //             setNoteTitle("");
-    //         });
-    //     }
-    // };
-
     // Update Note Handle
     const handleEditNoteClick = (
         noteId,
@@ -194,7 +171,7 @@ const NoteTakingApp = () => {
         setIsEditing(true);
     };
 
-    // Delete Note handle
+    // Delete Note Model Handel
     const openDeleteConfirmationModalForNote = (noteId) => {
         setSelectedNoteToDelete(noteId);
         setIsDeleteConfirmationOpen(true);
@@ -225,7 +202,6 @@ const NoteTakingApp = () => {
         // Create two promises for the API calls
         const fetchNotesPromise = fetchNotesData();
         const fetchVideoInfoPromise = fetchVideoInfoData();
-
         // Use Promise.all to wait for both promises to resolve
         Promise.all([fetchNotesPromise, fetchVideoInfoPromise])
             .then(() => {
