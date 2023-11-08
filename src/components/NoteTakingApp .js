@@ -7,6 +7,7 @@ import {
     updateNoteUtil,
     deleteNoteUtil,
 } from "../utils/noteSlice";
+import NoteForm from "./NoteForm";
 import { useParams } from "react-router-dom";
 import EditNoteModal from "./EditNoteModal";
 import { BiSolidSend } from "react-icons/bi";
@@ -16,6 +17,7 @@ import { BsCardText } from "react-icons/bs";
 import { BiEdit, BiTrash, BiSearch } from "react-icons/bi";
 import { fetchVideoInfo } from "../Services/noteServices";
 import NoteTakingAppSkeleton from "./NoteTakingAppSkeleton";
+import VideoInfo from "./VideoInfo";
 import NoteCard from "./NoteCard";
 import { useFormik } from "formik";
 import * as Yup from "yup";
@@ -132,29 +134,41 @@ const NoteTakingApp = () => {
     };
 
     // Create Note Handle
-    const formik = useFormik({
-        initialValues: {
-            noteTitle: "",
-            noteText: "",
-        },
-        validationSchema,
-        onSubmit: (values) => {
-            if (player) {
-                const currentTime = player.getCurrentTime();
-                const isoTimestamp = new Date(currentTime * 1000).toISOString();
-                const newNote = {
-                    title: values.noteTitle,
-                    timestamp: isoTimestamp,
-                    text: values.noteText,
-                };
-                dispatch(
-                    createNoteUtil({ userId, playlistId, videoId, newNote })
-                ).then(() => {
-                    formik.resetForm();
-                });
-            }
-        },
-    });
+    const handleNoteFormSubmit = (values) => {
+        if (player) {
+            const currentTime = player.getCurrentTime();
+            const isoTimestamp = new Date(currentTime * 1000).toISOString();
+            const newNote = {
+                title: values.noteTitle,
+                timestamp: isoTimestamp,
+                text: values.noteText,
+            };
+            dispatch(createNoteUtil({ userId, playlistId, videoId, newNote }));
+        }
+    };
+    // const formik = useFormik({
+    //     initialValues: {
+    //         noteTitle: "",
+    //         noteText: "",
+    //     },
+    //     validationSchema,
+    //     onSubmit: (values) => {
+    //         if (player) {
+    //             const currentTime = player.getCurrentTime();
+    //             const isoTimestamp = new Date(currentTime * 1000).toISOString();
+    //             const newNote = {
+    //                 title: values.noteTitle,
+    //                 timestamp: isoTimestamp,
+    //                 text: values.noteText,
+    //             };
+    //             dispatch(
+    //                 createNoteUtil({ userId, playlistId, videoId, newNote })
+    //             ).then(() => {
+    //                 formik.resetForm();
+    //             });
+    //         }
+    //     },
+    // });
     // Update Note Handle
     const handleEditNoteClick = (
         noteId,
@@ -239,77 +253,11 @@ const NoteTakingApp = () => {
                     opts={playerDimensions}
                 />
                 <div className="w-full shadow-lg">
-                    <form onSubmit={formik.handleSubmit}>
-                        <div>
-                            <label
-                                htmlFor="noteText"
-                                className="block text-gray-700 text-sm font-bold mb-2"
-                            >
-                                Note Content:
-                            </label>
-                            <input
-                                type="text"
-                                id="noteTitle"
-                                name="noteTitle"
-                                value={formik.values.noteTitle}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                className="max-w-md w-full border-grey shadow-md border-solid solid border-2 rounded-md px-4 py-2 leading-5 sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-200 mb-2"
-                                placeholder="Add your title here ..."
-                            />
-                            {formik.touched.noteTitle &&
-                            formik.errors.noteTitle ? (
-                                <div className="text-red-500 text-sm">
-                                    {formik.errors.noteTitle}
-                                </div>
-                            ) : null}
-                        </div>
-                        <div>
-                            <textarea
-                                rows="4"
-                                id="noteText"
-                                name="noteText"
-                                value={formik.values.noteText}
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                className="max-w-md w-full border-grey shadow-md border-solid solid border-2 rounded-md px-4 py-2 leading-5 sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-200"
-                                placeholder="Add your note here ..."
-                            />
-                            {formik.touched.noteText &&
-                            formik.errors.noteText ? (
-                                <div className="text-red-500 text-sm">
-                                    {formik.errors.noteText}
-                                </div>
-                            ) : null}
-                        </div>
-                        <div className="flex items-center justify-between">
-                            <button
-                                className={`${
-                                    !formik.isValid ||
-                                    !formik.dirty ||
-                                    formik.isSubmitting
-                                        ? "opacity-50 pointer-events-none bg-blue-500"
-                                        : "bg-blue-500 hover:bg-blue-700 text-white"
-                                } px-2 py-2 rounded-md flex justify-center items-center w-1/4`}
-                                type="submit"
-                            >
-                                Add
-                                <BiSolidSend />
-                            </button>
-                        </div>
-                    </form>
+                    <NoteForm onSubmit={handleNoteFormSubmit} />
                 </div>
             </div>
             <div className="flex-[40%] p-4 h-screen md::overflow-y-auto lg:overflow-y-auto xl:overflow-y-auto">
-                <div className=" p-2 rounded-lg shadow-sm border-2 border-solid border-gray-300">
-                    <h3 className="text-lg font-semibold">
-                        {videoInfo.videoTitle}
-                    </h3>
-                    <p className="text-sm text-gray-600">
-                        {videoInfo.videoDescription}
-                    </p>
-                    <p className="text-sm text-gray-600">{`Channel: ${videoInfo.channelTitle}`}</p>
-                </div>
+                <VideoInfo videoInfo={videoInfo} />
                 <div>
                     {sortedNotes.length > 0 && (
                         <h2 className="text-xl font-300 font-bold">Notes:</h2>
