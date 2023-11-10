@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import Button from "./ui/Button";
+import { FaTimes } from "react-icons/fa";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import { FaUser } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
@@ -18,7 +19,7 @@ const links = [
         href: "untrack",
     },
 ];
-const Sidebar = () => {
+const Sidebar = ({ isSmallScreen, handleHamburgerClick }) => {
     const navigate = useNavigate();
     const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
 
@@ -42,9 +43,22 @@ const Sidebar = () => {
                         NoteSync
                     </h1>
                 </Link>
+                {isSmallScreen && (
+                    <button
+                        className="text-white absolute top-4 right-4 "
+                        onClick={handleHamburgerClick}
+                    >
+                        <FaTimes size={20} />
+                    </button>
+                )}
                 <div className="flex flex-col space-y-7 mt-6 flex-[60%] items-start justify-start ">
                     {links.map((link, index) => (
-                        <NavLink key={index} to={link.href} className="w-full">
+                        <NavLink
+                            key={index}
+                            to={link.href}
+                            className="w-full"
+                            onClick={handleHamburgerClick}
+                        >
                             <MenuItem icon={link.icon} text={link.label} />
                         </NavLink>
                     ))}

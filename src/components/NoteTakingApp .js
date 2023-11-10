@@ -42,7 +42,8 @@ const NoteTakingApp = () => {
     const [isEditing, setIsEditing] = useState(false);
     const [editingNote, setEditingNote] = useState(null);
     const notes = useSelector((state) => state.notes.data);
-    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] = useState(false);
+    const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+        useState(false);
     const [selectedNoteToDelete, setSelectedNoteToDelete] = useState(null);
     const [isCardOpen, setIsCardOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
@@ -60,15 +61,15 @@ const NoteTakingApp = () => {
             const viewportWidth = window.innerWidth;
 
             // Adjust dimensions based on screen size
-            if (viewportWidth >= 768) {
+            if (viewportWidth >= 768 && viewportWidth <= 1280) {
                 setPlayerDimensions({
                     width: "100%",
-                    height: "400px",
+                    height: "420px",
                 });
-            } else {
+            } else if (viewportWidth > 1280 && viewportWidth <= 1536) {
                 setPlayerDimensions({
                     width: "100%",
-                    height: "300px", // Adjust the height for smaller screens
+                    height: "480px", // Adjust the height for smaller screens
                 });
             }
         };
@@ -132,10 +133,10 @@ const NoteTakingApp = () => {
         }
     };
     // Update Note Handle
-   const handleEditNoteClick = (note) => {
-       setSelectedNote(note);
-       setIsEditing(true);
-   };
+    const handleEditNoteClick = (note) => {
+        setSelectedNote(note);
+        setIsEditing(true);
+    };
 
     // Delete Note Model Handel
     const openDeleteConfirmationModalForNote = (noteId) => {
@@ -259,16 +260,15 @@ const NoteTakingApp = () => {
                                 newText,
                                 newTimestamp
                             ) => {
-                               updateNoteData(
-                                   noteId,
-                                   newTitle,
-                                   newText,
-                                   newTimestamp
-                               );
-                               setEditingNote(null);
-                               setIsEditing(false);
+                                updateNoteData(
+                                    noteId,
+                                    newTitle,
+                                    newText,
+                                    newTimestamp
+                                );
+                                setEditingNote(null);
+                                setIsEditing(false);
                             }}
-                          
                         />
                     ) : isCardOpen ? (
                         <NoteCard
