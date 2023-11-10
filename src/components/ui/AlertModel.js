@@ -9,7 +9,7 @@ const AlertModel = ({ onConfirm, onCancel , label , sublabel }) => {
                 {sublabel && (
                     <p className="text-sm mb-4 text-gray-800">{sublabel}</p>
                 )}
-                <div className="flex justify-end">
+                <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
                     <Button
                         onClick={onConfirm}
                         label="Confirm"

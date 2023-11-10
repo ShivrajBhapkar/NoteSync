@@ -69,7 +69,7 @@ const NoteTakingApp = () => {
             } else if (viewportWidth > 1280 && viewportWidth <= 1536) {
                 setPlayerDimensions({
                     width: "100%",
-                    height: "480px", // Adjust the height for smaller screens
+                    height: "450px", // Adjust the height for smaller screens
                 });
             }
         };
@@ -232,6 +232,11 @@ const NoteTakingApp = () => {
                         <p className="text-gray-600 font-bold text-xl text-center my-4">
                             You haven't added any notes yet. Start by adding
                             your first note!
+                        </p>
+                    )}
+                    {filteredNotes.length === 0 && (
+                        <p className="text-gray-600 font-bold text-xl text-center my-4">
+                            Oops! No notes found with the current search.
                         </p>
                     )}
                     {selectedNoteToDelete ? (

@@ -1,5 +1,5 @@
 import React from "react";
-
+import Button from "./ui/Button";
 const DeleteConfirmationModal = ({
     isOpen,
     onSave,
@@ -22,19 +22,17 @@ const DeleteConfirmationModal = ({
                     <p className="mb-4">
                         Are you sure you want to delete this note permanently?
                     </p>
-                    <div className="flex justify-end">
-                        <button
-                            className="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded mr-2"
+                    <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
+                        <Button
                             onClick={handleSave}
-                        >
-                            Delete
-                        </button>
-                        <button
-                            className="bg-gray-300 hover:bg-gray-400 text-gray-700 font-bold py-2 px-4 rounded"
+                            label="Delete"
+                            action="secondary"
+                        />
+                        <Button
                             onClick={onClose}
-                        >
-                            Cancel
-                        </button>
+                            label="Cancel"
+                            action="primary"
+                        />
                     </div>
                 </div>
             </div>
