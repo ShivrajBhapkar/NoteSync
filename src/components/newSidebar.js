@@ -1,8 +1,6 @@
 import React, { useState } from "react";
-import Button from "./ui/Button";
 import { FaTimes } from "react-icons/fa";
 import { useNavigate, NavLink, Link } from "react-router-dom";
-import { FaUser } from "react-icons/fa";
 import { FaSignOutAlt } from "react-icons/fa";
 import { logout } from "../Services/auth";
 import { MdPlaylistAddCheck, MdPlaylistRemove } from "react-icons/md";
