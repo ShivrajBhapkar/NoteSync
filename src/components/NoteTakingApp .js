@@ -203,7 +203,7 @@ const NoteTakingApp = () => {
     return dataIsReady ? (
         <div className="flex lg:h-full md:h-full xl:h-full max-h-fit flex-col lg:flex-row xl:flex-row sm:overflow-y-auto lg:overflow-y-hidden xl:overflow-y-hidden overflow-y-auto">
             <div className="flex-[60%] ">
-              <Back/>
+                <Back />
                 <YouTube
                     videoId={videoId}
                     onReady={onReady}
@@ -238,11 +238,7 @@ const NoteTakingApp = () => {
                             your first note!
                         </p>
                     )}
-                    {filteredNotes.length === 0 && (
-                        <p className="text-gray-600 font-bold text-xl text-center my-4">
-                            Oops! No notes found with the current search.
-                        </p>
-                    )}
+
                     {selectedNoteToDelete ? (
                         <DeleteConfirmationModal
                             isOpen={isDeleteConfirmationOpen}
@@ -287,90 +283,100 @@ const NoteTakingApp = () => {
                         />
                     ) : (
                         <ul className="flex flex-col pl-2 h-[100%] max-h-max overflow-y-auto">
-                            {filteredNotes.map((note) => (
-                                <li
-                                    key={note._id}
-                                    className="border rounded-lg p-4 mb-2 shadow-md border-gray-300"
-                                >
-                                    <div className="flex flex-col justify-between gap-y-2">
-                                        <div className="text-center">
-                                            <p
-                                                onClick={() =>
-                                                    handleTimestampClick(
-                                                        formatTime(
-                                                            note.timestamp
+                            {sortedNotes.length != 0 && filteredNotes.length === 0 ? (
+                                <p className="text-gray-600 font-bold text-xl text-center my-4">
+                                    Oops! No notes found with the current
+                                    search.
+                                </p>
+                            ) : (
+                                filteredNotes.map((note) => (
+                                    <li
+                                        key={note._id}
+                                        className="border rounded-lg p-4 mb-2 shadow-md border-gray-300"
+                                    >
+                                        <div className="flex flex-col justify-between gap-y-2">
+                                            <div className="text-center">
+                                                <p
+                                                    onClick={() =>
+                                                        handleTimestampClick(
+                                                            formatTime(
+                                                                note.timestamp
+                                                            )
                                                         )
-                                                    )
-                                                }
-                                                className="text-xl font-bold"
-                                            >
-                                                {note.title}
-                                                <div className="border-b border-gray-300 w-[80%] mx-auto my-2"></div>
-                                            </p>
-                                        </div>
-                                        <div className="flex justify-between">
-                                            <strong
-                                                onClick={() =>
-                                                    handleTimestampClick(
-                                                        formatTime(
-                                                            note.timestamp
+                                                    }
+                                                    className="text-xl font-bold"
+                                                >
+                                                    {note.title}
+                                                    <div className="border-b border-gray-300 w-[80%] mx-auto my-2"></div>
+                                                </p>
+                                            </div>
+                                            <div className="flex justify-between">
+                                                <strong
+                                                    onClick={() =>
+                                                        handleTimestampClick(
+                                                            formatTime(
+                                                                note.timestamp
+                                                            )
                                                         )
-                                                    )
-                                                }
-                                            >
-                                                Time :
-                                                <span className="cursor-pointer pl-2 text-blue-500">
-                                                    {formatTime(note.timestamp)}
-                                                </span>
-                                            </strong>
-                                            <div>
-                                                {note?.text.length > 10 ? (
-                                                    <div>
-                                                        {note?.text.substring(
-                                                            0,
-                                                            10
+                                                    }
+                                                >
+                                                    Time :
+                                                    <span className="cursor-pointer pl-2 text-blue-500">
+                                                        {formatTime(
+                                                            note.timestamp
                                                         )}
-                                                        {note?.text.length > 10
-                                                            ? "..."
-                                                            : ""}
-                                                    </div>
-                                                ) : (
-                                                    <div>{note?.text}</div>
-                                                )}
-                                            </div>
-                                            <div>
-                                                <button
-                                                    onClick={() =>
-                                                        openNoteCard(note)
-                                                    }
-                                                >
-                                                    <BsCardText />
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        handleEditNoteClick(
-                                                            note
-                                                        )
-                                                    }
-                                                    className="text-blue-500 px-2 py-1 rounded-lg ml-2"
-                                                >
-                                                    <BiEdit />
-                                                </button>
-                                                <button
-                                                    onClick={() =>
-                                                        openDeleteConfirmationModalForNote(
-                                                            note._id
-                                                        )
-                                                    }
-                                                    className="text-red-500 px-2 py-1 rounded-lg ml-2"
-                                                >
-                                                    <BiTrash />
-                                                </button>
+                                                    </span>
+                                                </strong>
+                                                <div>
+                                                    {note?.text.length > 10 ? (
+                                                        <div>
+                                                            {note?.text.substring(
+                                                                0,
+                                                                10
+                                                            )}
+                                                            {note?.text.length >
+                                                            10
+                                                                ? "..."
+                                                                : ""}
+                                                        </div>
+                                                    ) : (
+                                                        <div>{note?.text}</div>
+                                                    )}
+                                                </div>
+                                                <div>
+                                                    <button
+                                                        onClick={() =>
+                                                            openNoteCard(note)
+                                                        }
+                                                    >
+                                                        <BsCardText />
+                                                    </button>
+                                                    <button
+                                                        onClick={() =>
+                                                            handleEditNoteClick(
+                                                                note
+                                                            )
+                                                        }
+                                                        className="text-blue-500 px-2 py-1 rounded-lg ml-2"
+                                                    >
+                                                        <BiEdit />
+                                                    </button>
+                                                    <button
+                                                        onClick={() =>
+                                                            openDeleteConfirmationModalForNote(
+                                                                note._id
+                                                            )
+                                                        }
+                                                        className="text-red-500 px-2 py-1 rounded-lg ml-2"
+                                                    >
+                                                        <BiTrash />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                </li>
-                            ))}
+                                    </li>
+                                ))
+                            )}
                         </ul>
                     )}
                 </div>
