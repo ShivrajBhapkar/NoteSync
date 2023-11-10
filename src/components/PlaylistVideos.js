@@ -1,10 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "../axios-config";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import tokenService from "../Services/token.service";
 import PlaylistVideosSkeleton from "./PlaylistVideosSkeleton";
+import Back from "./ui/Back";
 const PlaylistVideos = () => {
     const [playlistData, setPlaylistData] = useState({});
     const [videos, setVideos] = useState([]);
@@ -12,6 +11,7 @@ const PlaylistVideos = () => {
     const { playlistId } = useParams();
     const { userId } = tokenService.getUser();
     const [loading, setLoading] = useState(true);
+
     useEffect(() => {
         // First API call to fetch playlist info
         axios
@@ -46,12 +46,11 @@ const PlaylistVideos = () => {
     if (error) {
         return <div>{error}</div>;
     }
-
-    // Once both API requests complete, or in the initial state, the UI will be rendered
     return (
-        <div className="flex p-4 h-full lg:flex-row xl:flex-row flex-col overflow-y-auto">
+        <div className="flex p-4 max-h-screen lg:flex-row xl:flex-row flex-col overflow-y-auto">
             <div className="lg:w-[35%] xl:w-[35%]">
                 <div className="w-full p-4 shadow-lg bg-gradient-to-br from-blue-200 to-blue-400 rounded-lg overflow-x-auto h-[100%]">
+                    <Back />
                     <img
                         src={playlistData.playlistImageURL}
                         alt={playlistData.playlistTitle}

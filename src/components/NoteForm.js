@@ -56,7 +56,7 @@ const NoteForm = ({ onSubmit }) => {
             </div>
             <div>
                 <textarea
-                    rows="4"
+                    rows="3"
                     id="noteText"
                     name="noteText"
                     value={formik.values.noteText}
@@ -77,7 +77,7 @@ const NoteForm = ({ onSubmit }) => {
                         !formik.isValid || !formik.dirty || formik.isSubmitting
                             ? "opacity-50 pointer-events-none bg-blue-500"
                             : "bg-blue-500 hover-bg-blue-700 text-white"
-                    } px-2 py-2 rounded-md flex justify-center items-center w-1/4`}
+                    } px-2 py-2 rounded-md flex justify-center items-center w-1/5`}
                     type="submit"
                 >
                     Add <BiSolidSend />

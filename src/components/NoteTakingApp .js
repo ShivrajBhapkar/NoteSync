@@ -9,6 +9,7 @@ import {
 } from "../utils/noteSlice";
 import NoteForm from "./NoteForm";
 import { useParams } from "react-router-dom";
+import { IoMdArrowBack } from "react-icons/io";
 import EditNoteModal from "./EditNoteModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import tokenService from "../Services/token.service";
@@ -18,6 +19,7 @@ import { fetchVideoInfo } from "../Services/noteServices";
 import NoteTakingAppSkeleton from "./NoteTakingAppSkeleton";
 import VideoInfo from "./VideoInfo";
 import NoteCard from "./NoteCard";
+import Back from "./ui/Back";
 function formatTime(timeInSeconds) {
     if (timeInSeconds) {
         const timestampDate = new Date(timeInSeconds);
@@ -47,6 +49,7 @@ const NoteTakingApp = () => {
     const [selectedNoteToDelete, setSelectedNoteToDelete] = useState(null);
     const [isCardOpen, setIsCardOpen] = useState(false);
     const [selectedNote, setSelectedNote] = useState(null);
+  
     const [playerDimensions, setPlayerDimensions] = useState({
         width: "100%",
         height: "400px",
@@ -69,7 +72,7 @@ const NoteTakingApp = () => {
             } else if (viewportWidth > 1280 && viewportWidth <= 1536) {
                 setPlayerDimensions({
                     width: "100%",
-                    height: "450px", // Adjust the height for smaller screens
+                    height: "420px", // Adjust the height for smaller screens
                 });
             }
         };
@@ -200,6 +203,7 @@ const NoteTakingApp = () => {
     return dataIsReady ? (
         <div className="flex lg:h-full md:h-full xl:h-full max-h-fit flex-col lg:flex-row xl:flex-row sm:overflow-y-auto lg:overflow-y-hidden xl:overflow-y-hidden overflow-y-auto">
             <div className="flex-[60%] ">
+              <Back/>
                 <YouTube
                     videoId={videoId}
                     onReady={onReady}
