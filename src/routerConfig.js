@@ -1,10 +1,7 @@
 import React from "react";
 import { createBrowserRouter, Navigate } from "react-router-dom";
 import Body from "./components/Body";
-import MaineContainer from "./components/MaineContainer";
-import WatchPage from "./components/WatchPage";
 import NoteTakingApp from "./components/NoteTakingApp ";
-import Demo from "./components/Demo";
 import UserUnTrackPlayList from "./components/UserUnTrackPlayList";
 import UserTrackPlayList from "./components/UserTrackPlayLists";
 import LoginComponent from "./components/LoginComponent";
@@ -29,8 +26,8 @@ const appRouter = createBrowserRouter([
         element: <HomePage />, // Render the HomePage component
     },
     {
-        path: "/dashboard", 
-        element: <Body />, 
+        path: "/dashboard",
+        element: <Body />,
         children: [
             {
                 path: "/dashboard",
@@ -39,10 +36,6 @@ const appRouter = createBrowserRouter([
             {
                 path: "watch/:playlistId/:videoId",
                 element: <ProtectedRoute element={<NoteTakingApp />} />,
-            },
-            {
-                path: "demo",
-                element: <ProtectedRoute element={<Demo />} />,
             },
             {
                 path: "unTrack",
