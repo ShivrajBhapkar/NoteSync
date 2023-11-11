@@ -205,15 +205,15 @@ const NoteTakingApp = () => {
         return false; // Exclude notes with missing or empty title/text properties.
     });
 const opts = {
-    height:playerDimensions.height,
-    width:playerDimensions.width,
+    height: playerDimensions.height,
+    width: playerDimensions.width,
     playerVars: {
         // https://developers.google.com/youtube/player_parameters
         // autoplay: 1, // Auto-play the video
         controls: 1, // Show video controls
         modestbranding: 1, // Show a smaller YouTube logo
         loop: 1, // Loop the video
-        origin: "http://localhost:3001", // Set your actual origin here
+        origin: `http://localhost:3001/watch/${playlistId}/${videoId}`, // Set your actual origin here
         rel: "0",
     },
 };
@@ -296,7 +296,7 @@ const opts = {
                         />
                     ) : (
                         <ul className="flex flex-col pl-2 h-[100%] max-h-max overflow-y-auto">
-                            {sortedNotes.length != 0 &&
+                            {sortedNotes.length !== 0 &&
                             filteredNotes.length === 0 ? (
                                 <p className="text-gray-600 font-bold text-xl text-center my-4">
                                     Oops! No notes found with the current
