@@ -13,8 +13,7 @@ const PlaylistVideosSkeleton = () => {
             </div>
 
             <div className="lg:w-2/3 xl:w-2/3 p-4 lg-overflow-y-auto xl-overflow-y-auto space-y-2">
-                <h2 className="text-2xl font-semibold bg-gray-300 h-8"></h2>
-
+                <h2 className="text-2xl font-semibold bg-gray-300 h-8">{""}</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mt-4 lg-w-full xl-w-full md-w-full">
                     {Array.from({ length: 12 }, (_, index) => (
                         <div className={skeletonVideoCardStyles} key={index}>

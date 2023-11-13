@@ -9,7 +9,6 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
     const user = TokenService.getUser();
     const navigate = useNavigate();
     const [loading, setLoading] = useState(false); // Add loading state
-    const [animation, setAnimation] = useState(false);
     function notifyme(msg) {
         const notify = () =>
             toast.info(msg, {
@@ -26,17 +25,12 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
     }
     async function addToLearning() {
         if (loading) return; // Prevent multiple clicks while loading
-
         try {
             setLoading(true); // Start loading state
-            setAnimation(true); // Start animation
-
             const payload = {
                 playlistId: playlistInfo.playlistId,
             };
-
             await axios.post(`/users/${user.userId}/trackPlaylists`, payload);
-
             // On success, display the success message and navigate
             notifyme("Playlist added to learning successfully");
             navigate("/dashboard");
@@ -44,7 +38,6 @@ const UserPlaylistsCards = ({ playlistInfo }) => {
             console.error("Error adding playlist to learning:", error);
         } finally {
             setLoading(false); // Reset loading state
-            setAnimation(false); // Stop animation
         }
     }
     return (

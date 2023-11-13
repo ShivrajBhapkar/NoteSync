@@ -34,14 +34,13 @@ const NoteTakingApp = () => {
     const [player, setPlayer] = useState(null);
     const [dataIsReady, setDataIsReady] = useState(false);
     const [videoInfo, setVideoInfo] = useState([]);
-    const [isPlayerReady, setIsPlayerReady] = useState(false);
     const [searchQuery, setSearchQuery] = useState("");
     const { userId } = tokenService.getUser();
     const { playlistId } = useParams();
     const { videoId } = useParams();
     const dispatch = useDispatch();
     const [isEditing, setIsEditing] = useState(false);
-    const [editingNote, setEditingNote] = useState(null);
+
     const notes = useSelector((state) => state.notes.data);
     const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
         useState(false);
@@ -156,7 +155,6 @@ const NoteTakingApp = () => {
     const onReady = (event) => {
         if (event.target) {
             setPlayer(event.target);
-            setIsPlayerReady(true);
         }
     };
 
@@ -268,7 +266,6 @@ const NoteTakingApp = () => {
                         <EditNoteModal
                             isOpen={isEditing}
                             onClose={() => {
-                                setEditingNote(null);
                                 setIsEditing(false);
                             }}
                             note={selectedNote}
@@ -284,7 +281,6 @@ const NoteTakingApp = () => {
                                     newText,
                                     newTimestamp
                                 );
-                                setEditingNote(null);
                                 setIsEditing(false);
                             }}
                         />
