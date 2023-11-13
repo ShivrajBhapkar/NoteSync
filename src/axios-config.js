@@ -70,8 +70,7 @@ instance.interceptors.response.use(
                 originalConfig._retry = true;
                 try {
                     // Make sure this is the first request to handle token expiration
-
-                    const refreshedResponse = await refreshToken();
+                    await refreshToken();
                     return instance(originalConfig);
                     // return axiosInstance(originalConfig);
                 } catch (refreshError) {

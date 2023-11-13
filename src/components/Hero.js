@@ -6,7 +6,7 @@ import { NavBar } from "../components/NavBar";
 import { ButtonLink } from "../components/ui/ButtonLink";
 import tokenService from "../Services/token.service";
 const Hero = () => {
-    const user = tokenService.getUser(); 
+    const user = tokenService.getUser();
     return (
         <Section as="header" className="bg-yellow-50">
             <NavBar />
@@ -21,18 +21,12 @@ const Hero = () => {
                     </p>
                     <div className="flex sm:flex-row flex-col items-center sm:gap-8 gap-4 relative">
                         <ButtonLink
-                            to={user !== null? "/dashboard" : "/login"}
+                            to={user !== null ? "/dashboard" : "/login"}
                             className="md:max-w-max w-full"
                             stretch
                         >
                             Go to dashboard
                         </ButtonLink>
-                        {/* <a
-                            href="/#testimonials"
-                            className="font-bold text-indigo-600 underline hover:no-underline"
-                        >
-                            View Examples
-                        </a> */}
                     </div>
                     <div className="flex sm:flex-row flex-col sm:items-center gap-4 sm:pb-0 pb-10">
                         <div className="flex gap-2">
