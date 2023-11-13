@@ -4,7 +4,6 @@ const DeleteConfirmationModal = ({
     isOpen,
     onSave,
     onClose,
-    onConfirm,
     selectedNoteToDelete,
 }) => {
     const handleSave = () => {

@@ -1,10 +1,8 @@
 import React from "react";
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "../axios-config";
 import UserPlaylistsCards from "./UserPlaylistsCards";
-import { useSelector } from "react-redux";
-import { ToastContainer, toast } from "react-toastify";
 import TokenService from "../Services/token.service";
 import "react-toastify/dist/ReactToastify.css";
 import SkeletonLoader from "./SkeletonLoader";

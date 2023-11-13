@@ -1,5 +1,5 @@
 import React from 'react'
-import { useParams, Link, useNavigate } from "react-router-dom";
+import {useNavigate } from "react-router-dom";
 import { IoMdArrowBack } from "react-icons/io";
 const Back = () => {
        const navigate = useNavigate();

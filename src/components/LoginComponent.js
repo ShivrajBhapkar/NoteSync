@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { login } from "../Services/auth";
 import TokenService from "../Services/token.service";
@@ -6,25 +6,25 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 const LoginComponent = () => {
     const user = TokenService.getUser();
-    const navigate = useNavigate(); 
+    const navigate = useNavigate();
     if (user && user.userId) {
         return <Navigate to="/" replace />;
     }
-    const handleLogin = async(values) => {
+    const handleLogin = async (values) => {
         await login(values);
-        navigate("/dashboard")
+        navigate("/dashboard");
     };
-   const validationSchema = Yup.object().shape({
-       email: Yup.string()
-           .email("Invalid email address")
-           .required("Email is required"),
-       password: Yup.string()
-           .matches(
-               /^(?=.*[!@#\$%\^&\*])(?=.{8,})/,
-               "Password must contain at least 8 characters with one special character"
-           )
-           .required("Password is required"),
-   });
+    const validationSchema = Yup.object().shape({
+        email: Yup.string()
+            .email("Invalid email address")
+            .required("Email is required"),
+        password: Yup.string()
+            .matches(
+                /^(?=.*[!@#\$%\^&\*])(?=.{8,})/,
+                "Password must contain at least 8 characters with one special character"
+            )
+            .required("Password is required"),
+    });
 
     return (
         <main className="mx-auto flex min-h-screen w-full items-center justify-center bg-gray-900 text-white">
@@ -46,7 +46,7 @@ const LoginComponent = () => {
                                     htmlFor="email"
                                     className="text-sm font-medium"
                                 >
-                                   Email
+                                    Email
                                 </label>
                                 <Field
                                     type="text"
@@ -94,7 +94,7 @@ const LoginComponent = () => {
                         </Form>
                     )}
                 </Formik>
-            
+
                 <p className="text-center text-lg">
                     No account?
                     <a

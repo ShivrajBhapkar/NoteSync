@@ -1,9 +1,8 @@
-import React, { useState } from "react";
+import React from "react";
 
 import { Section } from "../components/ui/Section";
 
 const Footer = () => {
-  
     return (
         <Section as="footer" className="bg-yellow-50">
             <div

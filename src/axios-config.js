@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import LoginComponent from "./components/LoginComponent";
 
 const instance = axios.create({
-    baseURL: "http://localhost:3000/v1", // Your API base URL
+    baseURL: "https://notesync-7yna.onrender.com/v1", // Your API base URL
     headers: {
         "Content-Type": "application/json",
     },
@@ -14,7 +14,7 @@ const refreshToken = async () => {
         const refreshToken = JSON.parse(
             localStorage.getItem("User")
         ).refreshToken;
-    const user = JSON.parse(localStorage.getItem("User"));
+        const user = JSON.parse(localStorage.getItem("User"));
         const response = await axios.post(
             "http://localhost:3000/v1/auth/refresh-tokens",
             {
@@ -47,7 +47,7 @@ instance.interceptors.request.use(
     (config) => {
         const user = JSON.parse(localStorage.getItem("User"));
         if (user && user.accessToken) {
-             config.headers.Authorization = `Bearer ${user.accessToken}`;
+            config.headers.Authorization = `Bearer ${user.accessToken}`;
         }
         return config;
     },
@@ -74,14 +74,16 @@ instance.interceptors.response.use(
                     const refreshedResponse = await refreshToken();
                     return instance(originalConfig);
                     // return axiosInstance(originalConfig);
-              
                 } catch (refreshError) {
-                    console.error("Error handling token expiration:", refreshError);
-                    <Navigate to={<LoginComponent/>}/>
+                    console.error(
+                        "Error handling token expiration:",
+                        refreshError
+                    );
+                    <Navigate to={<LoginComponent />} />;
                 }
             }
         }
-        
+
         return Promise.reject(error);
     }
 );

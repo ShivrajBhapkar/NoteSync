@@ -1,9 +1,6 @@
 import React from "react";
-
 import hero from "../assets/hero-illustration.png";
 import { ReactComponent as Checkmark } from "../assets/checkmark.svg";
-import { ReactComponent as Star } from "../assets/start.svg";
-
 import { Section } from "../components/ui/Section";
 import { NavBar } from "../components/NavBar";
 import { ButtonLink } from "../components/ui/ButtonLink";

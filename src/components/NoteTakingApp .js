@@ -9,7 +9,6 @@ import {
 } from "../utils/noteSlice";
 import NoteForm from "./NoteForm";
 import { useParams } from "react-router-dom";
-import { IoMdArrowBack } from "react-icons/io";
 import EditNoteModal from "./EditNoteModal";
 import DeleteConfirmationModal from "./DeleteConfirmationModal";
 import tokenService from "../Services/token.service";
@@ -214,7 +213,7 @@ const NoteTakingApp = () => {
             controls: 1, // Show video controls
             modestbranding: 1, // Show a smaller YouTube logo
             loop: 1, // Loop the video
-            origin: "http://localhost:3001", // Set your actual origin here
+            origin: "http://localhost:3000", // Set your actual origin here
             rel: "0",
         },
     };

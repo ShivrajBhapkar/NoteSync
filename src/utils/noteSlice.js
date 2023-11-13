@@ -20,7 +20,6 @@ export const createNoteUtil = createAsyncThunk(
     "notes/createNote",
     async (params) => {
         await createNote(params);
-        console.log(params);
         const userId = params.userId;
         const playlistId = params.playlistId;
         const videoId = params.videoId;

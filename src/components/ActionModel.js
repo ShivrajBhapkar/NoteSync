@@ -1,6 +1,5 @@
 import React from "react";
-
-const GenericModal = ({ title,subtitle , label, action }) => {
+const GenericModal = ({ title, subtitle, label, action }) => {
     return (
         <div className="p-4 border mx-auto max-w-rem-600 text-center rounded-md shadow-lg">
             <h3 className="text-xl font-bold">Oh no!</h3>

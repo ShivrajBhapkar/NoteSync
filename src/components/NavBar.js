@@ -1,10 +1,8 @@
 import React, { useState } from "react";
-
 import { Link } from "react-router-dom";
 import { ButtonLink } from "../components/ui/ButtonLink";
 import tokenService from "../Services/token.service";
 import { ReactComponent as HamburgerMenu } from "../assets/hamburger-menu.svg";
-
 export const NavBar = ({ className }) => {
     const [dropdownIsShown, setDropdownIsShown] = useState(false);
     const toggleDropdown = () => setDropdownIsShown(!dropdownIsShown);
