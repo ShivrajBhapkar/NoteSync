@@ -16,7 +16,7 @@ const refreshToken = async () => {
         ).refreshToken;
         const user = JSON.parse(localStorage.getItem("User"));
         const response = await axios.post(
-            "http://localhost:3000/v1/auth/refresh-tokens",
+            "https://notesync-7yna.onrender.com/v1/auth/refresh-tokens",
             {
                 refreshToken: refreshToken,
             },

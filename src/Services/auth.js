@@ -2,13 +2,11 @@
 import axios from "../axios-config";
 import TokenService from "./token.service";
 export const login = async ({ email, password }) => {
-    
     try {
         const response = await axios.post("/auth/login", {
             email,
             password,
         });
-
         if (response.status === 200) {
             const { tokens, user } = response.data;
             const accessToken = tokens.access.token;
