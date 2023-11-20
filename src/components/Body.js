@@ -66,7 +66,7 @@ const Body = () => {
                         </div>
                     )}
                 </div>
-                <div className="px-5 pt-2 h-[98%] ">
+                <div className="px-2 pt-2 h-[100%] ">
                     <Outlet />
                 </div>
             </div>

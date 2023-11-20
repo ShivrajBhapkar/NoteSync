@@ -30,10 +30,10 @@ const NoteForm = ({ onSubmit }) => {
 
     return (
         <form onSubmit={formik.handleSubmit}>
-            <div>
+            <div className="mt-1">
                 <label
                     htmlFor="noteText"
-                    className="block text-gray-700 text-sm font-bold mb-2"
+                    className="block text-gray-700 text-lg font-extrabold mb-2 p-2"
                 >
                     Note Content:
                 </label>
@@ -44,28 +44,28 @@ const NoteForm = ({ onSubmit }) => {
                     value={formik.values.noteTitle}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="max-w-md w-full border-grey shadow-md border-solid solid border-2 rounded-md px-4 py-2 leading-5 sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-200 mb-2"
+                    className="max-w-md w-full border-gray-300 shadow-md border-solid solid border-2 rounded-md px-4 py-1 leading-5 sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-200 mb-2"
                     placeholder="Add your title here ..."
                 />
                 {formik.touched.noteTitle && formik.errors.noteTitle ? (
-                    <div className="text-red-500 text-sm">
+                    <div className="text-red-500 text-xs">
                         {formik.errors.noteTitle}
                     </div>
                 ) : null}
             </div>
             <div>
                 <textarea
-                    rows="3"
+                    rows="4"
                     id="noteText"
                     name="noteText"
                     value={formik.values.noteText}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
-                    className="max-w-md w-full border-grey shadow-md border-solid solid border-2 rounded-md px-4 py-2 leading-5 sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-200"
+                    className="max-w-md w-full border-2 border-gray-300 shadow-md border-solid solid  rounded-md px-4 py-1 leading-5 sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-200"
                     placeholder="Add your note here ..."
                 />
                 {formik.touched.noteText && formik.errors.noteText ? (
-                    <div className="text-red-500 text-sm">
+                    <div className="text-red-500 text-xs">
                         {formik.errors.noteText}
                     </div>
                 ) : null}
@@ -76,7 +76,7 @@ const NoteForm = ({ onSubmit }) => {
                         !formik.isValid || !formik.dirty || formik.isSubmitting
                             ? "opacity-50 pointer-events-none bg-blue-500"
                             : "bg-blue-500 hover-bg-blue-700 text-white"
-                    } px-2 py-2 rounded-md flex justify-center items-center w-1/5`}
+                    } px-2 py-1 rounded-md flex justify-center items-center w-1/5`}
                     type="submit"
                 >
                     Add <BiSolidSend />

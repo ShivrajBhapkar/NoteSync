@@ -63,15 +63,15 @@ const NoteTakingApp = () => {
             const viewportWidth = window.innerWidth;
 
             // Adjust dimensions based on screen size
-            if (viewportWidth >= 768 && viewportWidth <= 1280) {
+            if (viewportWidth >= 768 && viewportWidth <= 1536) {
                 setPlayerDimensions({
                     width: "100%",
-                    height: "420px",
+                    height: "400px",
                 });
-            } else if (viewportWidth > 1280 && viewportWidth <= 1536) {
+            } else if (viewportWidth > 300 && viewportWidth <= 640) {
                 setPlayerDimensions({
                     width: "100%",
-                    height: "420px", // Adjust the height for smaller screens
+                    height: "320px", // Adjust the height for smaller screens
                 });
             }
         };
@@ -204,8 +204,6 @@ const NoteTakingApp = () => {
         width: playerDimensions.width,
         host: "https://www.youtube.com",
         playerVars: {
-            // https://developers.google.com/youtube/player_parameters
-            // autoplay: 1, // Auto-play the video
             wmode: "opaque",
             enablejsapi: 1,
             controls: 1, // Show video controls
@@ -216,11 +214,11 @@ const NoteTakingApp = () => {
         },
     };
     return dataIsReady ? (
-        <div className="flex lg:h-full md:h-full xl:h-full max-h-fit flex-col lg:flex-row xl:flex-row sm:overflow-y-auto lg:overflow-y-hidden xl:overflow-y-hidden overflow-y-auto">
-            <div className="flex-[60%] ">
+        <div className="flex lg:h-full md:h-full xl:h-full  flex-col lg:flex-row xl:flex-row sm:overflow-y-auto lg:overflow-y-hidden xl:overflow-y-hidden overflow-y-auto ">
+            <div className="flex-[60%]">
                 <Back />
                 <YouTube videoId={videoId} onReady={onReady} opts={opts} />
-                <div className="w-full shadow-lg">
+                <div className="w-full pl-2">
                     <NoteForm onSubmit={handleNoteFormSubmit} />
                 </div>
             </div>
