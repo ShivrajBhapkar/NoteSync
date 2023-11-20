@@ -47,8 +47,8 @@ const PlaylistVideos = () => {
         return <div>{error}</div>;
     }
     return (
-        <div className="flex p-4 max-h-screen lg:flex-row xl:flex-row flex-col overflow-y-auto">
-            <div className="lg:w-[35%] xl:w-[35%]">
+        <div className="flex lg:p-4 md:p-4 p-0 max-h-screen max-w-screen lg:flex-row xl:flex-row flex-col overflow-y-auto">
+            <div className="lg:w-[35%] xl:w-[35%] sm:w-[100%] w-[100%]">
                 <div className="w-full p-4 shadow-lg bg-gradient-to-br from-blue-200 to-blue-400 rounded-lg overflow-x-auto h-[100%]">
                     <Back />
                     <img
@@ -65,10 +65,9 @@ const PlaylistVideos = () => {
                 </div>
             </div>
 
-            <div className="lg:w-2/3 xl:w-2/3 p-4 lg:overflow-y-auto xl:overflow-y-auto space-y-2 ">
-                <h2 className="text-2xl font-semibold">Videos</h2>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 mt-4 lg:w-full xl:w-full md:w-full">
+            <div className="lg:w-2/3 xl:w-2/3 w-full lg:p-4 md:p-4 sm:p-0 lg:overflow-y-auto xl:overflow-y-auto space-y-2 ">
+                <h2 className="text-2xl p-2 font-semibold">Videos</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-y-2 lg:grid-cols-2 mt-4 lg:w-full xl:w-full md:w-full border border-solid border-slate-400">
                     {videos.map((video) => (
                         <div
                             className="border-solid border-2 border-grey-200"
@@ -82,9 +81,9 @@ const PlaylistVideos = () => {
                                     <img
                                         src={video.videoImageURL}
                                         alt={video.videoTitle}
-                                        className="lg:w-full xl:w-full md:w-full w-[60%] mx-auto h-44 object-cover rounded-lg"
+                                        className="lg:w-full xl:w-full md:w-full w-[100%] mx-auto h-44 object-cover rounded-lg"
                                     />
-                                    <p className="text-sm  text-center  font-semibold mt-2 overflow-hidden overflow-ellipsis whitespace-nowrap">
+                                    <p className="text-sm text-center  font-semibold mt-2 overflow-hidden overflow-ellipsis whitespace-nowrap">
                                         {video.videoTitle}
                                     </p>
                                 </div>
