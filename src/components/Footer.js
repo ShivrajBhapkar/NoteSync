@@ -28,12 +28,12 @@ const Footer = () => {
                         </h3>
                         <ul className="grid gap-2 text-gray-500 md:text-base text-lg">
                             <li>
-                                <a className="hover:underline" href="#">
+                                <a className="hover:underline" href="/">
                                     Homepage
                                 </a>
                             </li>
                             <li>
-                                <a className="hover:underline" href="#features">
+                                <a className="hover:underline" href="/features">
                                     Features
                                 </a>
                             </li>
@@ -45,44 +45,68 @@ const Footer = () => {
                         </h3>
                         <ul className="grid gap-2 text-gray-500 sm:text-base text-lg">
                             <li>
-                                <a
+                                <button
                                     rel="noreferrer"
                                     className="hover:underline"
-                                    href="https://github.com/ShivrajBhapkar"
-                                    target="_blank"
+                                    onClick={() =>
+                                        window.open(
+                                            "https://github.com/ShivrajBhapkar",
+                                            "_blank"
+                                        )
+                                    }
                                 >
                                     Github
-                                </a>
+                                </button>
                             </li>
                             <li>
-                                <a
+                                <button
                                     rel="noreferrer"
                                     className="hover:underline"
-                                    href="https://www.linkedin.com/in/shivraj-bhapkar102/"
-                                    target="_blank"
+                                    onClick={() =>
+                                        window.open(
+                                            "https://www.linkedin.com/in/shivraj-bhapkar102/",
+                                            "_blank"
+                                        )
+                                    }
                                 >
                                     LinkedIn
-                                </a>
+                                </button>
                             </li>
                             <li>
-                                <a
+                                <button
+                                    rel="noreferrer"
+                                    className="hover:underline"
+                                    onClick={() =>
+                                        window.open(
+                                            "https://twitter.com/Dev_Shivraj",
+                                            "_blank"
+                                        )
+                                    }
+                                >
+                                    Twitter
+                                </button>
+                                {/* <a
                                     rel="noreferrer"
                                     className="hover:underline"
                                     href="https://twitter.com/Dev_Shivraj"
                                     target="_blank"
                                 >
                                     Twitter
-                                </a>
+                                </a> */}
                             </li>
                             <li>
-                                <a
+                                <button
                                     rel="noreferrer"
                                     className="hover:underline"
-                                    href="https://www.instagram.com/dev_shivraj_102/"
-                                    target="_blank"
+                                    onClick={() =>
+                                        window.open(
+                                            "https://www.instagram.com/dev_shivraj_102/",
+                                            "_blank"
+                                        )
+                                    }
                                 >
-                                    Instagram
-                                </a>
+                                    Twitter
+                                </button>
                             </li>
                         </ul>
                     </div>
