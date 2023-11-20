@@ -105,8 +105,9 @@ const Footer = () => {
                                         )
                                     }
                                 >
-                                    Twitter
+                                    Instagram
                                 </button>
+                                
                             </li>
                         </ul>
                     </div>
