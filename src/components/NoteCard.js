@@ -4,7 +4,7 @@ const NoteCard = ({
     title,
     text,
     onClose,
-    maxCharactersPerParagraph = 68,
+    maxCharactersPerParagraph = 50,
 }) => {
     const paragraphs = [];
     let textRemaining = text;

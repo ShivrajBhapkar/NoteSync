@@ -83,7 +83,6 @@ const Sidebar = ({ isSmallScreen, handleHamburgerClick }) => {
     );
 };
 
-
 const MenuItem = ({ icon, text }) => {
     return (
         <div className="w-full flex items-center gap-x-1.5 group select-none">

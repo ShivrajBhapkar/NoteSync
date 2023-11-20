@@ -6,43 +6,45 @@ import Sidebar from "./newSidebar";
 
 const Body = () => {
     const [showSidebar, setShowSidebar] = useState(true);
- const [isSmallScreen, setIsSmallScreen] = useState(window.innerWidth <= 768);
+    const [isSmallScreen, setIsSmallScreen] = useState(
+        window.innerWidth <= 768
+    );
     const handleSidebarToggle = () => {
         setShowSidebar(!showSidebar);
     };
 
     const handleHamburgerClick = () => {
-         if (isSmallScreen) {
-             handleSidebarToggle(); // Toggle the sidebar when the screen is less than medium
-         }
+        if (isSmallScreen) {
+            handleSidebarToggle(); // Toggle the sidebar when the screen is less than medium
+        }
     };
 
-   useEffect(() => {
-       const handleWindowResize = () => {
-           const screenWidth = window.innerWidth;
-           if (screenWidth <= 768) {
-               setShowSidebar(false);
-               setIsSmallScreen(true);
-           } else {
-               setShowSidebar(true);
-               setIsSmallScreen(false);
-           }
-       };
+    useEffect(() => {
+        const handleWindowResize = () => {
+            const screenWidth = window.innerWidth;
+            if (screenWidth <= 768) {
+                setShowSidebar(false);
+                setIsSmallScreen(true);
+            } else {
+                setShowSidebar(true);
+                setIsSmallScreen(false);
+            }
+        };
 
-       window.addEventListener("resize", handleWindowResize);
+        window.addEventListener("resize", handleWindowResize);
 
-       handleWindowResize();
+        handleWindowResize();
 
-       return () => {
-           window.removeEventListener("resize", handleWindowResize);
-       };
-   }, []);
+        return () => {
+            window.removeEventListener("resize", handleWindowResize);
+        };
+    }, []);
     return (
-        <div className="flex h-screen">
+        <div className="flex h-screen max-h-screen">
             <div
                 className={`${
                     isSmallScreen ? "fixed inset-y-0 z-50" : ""
-                } w-[60%] md:w-[15%] lg:w-[15%] xl:w-[15%] md:h-[100%] sm:h-[100%] lg:h-[100%] h-[110%] ${
+                } w-[60%] md:w-[15%] lg:w-[15%] xl:w-[15%] h-full ${
                     showSidebar ? "block" : "hidden"
                 } bg-gray-800`}
             >
