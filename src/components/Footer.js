@@ -18,7 +18,7 @@ const Footer = () => {
                         Edit, and Organize with Ease
                     </p>
                     <p className="text-gray-500 mt-4 sm:text-base text-lg">
-                        <>Made with ♥ in the India.</>
+                        <>Made with ♥ in  India.</>
                     </p>
                 </div>
                 <div className="flex sm:flex-row flex-col md:w-3/5 sm:gap-0  justify-center">

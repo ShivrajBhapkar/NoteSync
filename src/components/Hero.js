@@ -10,7 +10,7 @@ const Hero = () => {
     return (
         <Section as="header" className="bg-yellow-50">
             <NavBar />
-            <div className="flex sm:flex-row flex-col-reverse items-center sm:my-10 -mt-16">
+            <div className="flex sm:flex-row flex-col-reverse items-center justify-center sm:my-10 -mt-16">
                 <div className="sm:w-1/2 flex flex-col justify-center gap-4">
                     <h1 className="sm:text-5xl text-4xl font-semibold">
                         Elevate Your Learning with Timestamped Notes

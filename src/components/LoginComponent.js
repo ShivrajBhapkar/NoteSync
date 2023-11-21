@@ -28,7 +28,7 @@ const LoginComponent = () => {
 
     return (
         <main className="mx-auto flex min-h-screen w-full items-center justify-center bg-gray-900 text-white">
-            <section className="flex w-[30rem] flex-col space-y-10">
+            <section className="w-96 flex flex-col space-y-4 p-4 rounded-lg shadow-md">
                 <div className="text-center text-4xl font-medium">Log In</div>
                 <Formik
                     initialValues={{
@@ -95,11 +95,11 @@ const LoginComponent = () => {
                     )}
                 </Formik>
 
-                <p className="text-center text-lg">
+                <p className="text-center text-sm">
                     No account?
                     <a
                         href="/register"
-                        className="font-medium text-indigo-500 underline-offset-4 hover:underline"
+                        className="font-medium text-indigo-500 underline-offset-4 hover:underline p-2"
                     >
                         Create One
                     </a>

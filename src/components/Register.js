@@ -7,9 +7,6 @@ import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
 
 function Register() {
-    //    const [name, setName] = useState("");
-    //    const [email, setEmail] = useState("");
-    //    const [password, setPassword] = useState("");
     const navigate = useNavigate();
     const userId = useSelector((store) => store.authentication.userId);
     if (userId !== null) {
@@ -153,7 +150,7 @@ function Register() {
                     Already have an account?{" "}
                     <a
                         href="/login"
-                        className="text-indigo-500 hover:underline"
+                        className="text-indigo-500 hover:underline p-2"
                     >
                         Log In
                     </a>

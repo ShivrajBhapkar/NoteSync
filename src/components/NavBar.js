@@ -14,7 +14,7 @@ export const NavBar = ({ className }) => {
     return (
         <>
             <nav
-                className={`flex justify-between w-full py-8 items-center relative ${className}`}
+                className={`flex justify-between w-full mb-4 py-8 items-center relative ${className}`}
             >
                 <Link to="/">
                     <h3 className="sm:font-bold font-semibold sm:text-lg text-xl">
