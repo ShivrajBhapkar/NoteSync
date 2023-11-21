@@ -1,5 +1,6 @@
 import React from "react";
 import { useNavigate, Navigate } from "react-router-dom";
+import { Link, redirect, useLocation } from "react-router-dom";
 import { login } from "../Services/auth";
 import TokenService from "../Services/token.service";
 import { Formik, Field, Form, ErrorMessage } from "formik";
@@ -97,12 +98,12 @@ const LoginComponent = () => {
 
                 <p className="text-center text-sm">
                     No account?
-                    <a
-                        href="/register"
+                    <Link
+                        to="/register"
                         className="font-medium text-indigo-500 underline-offset-4 hover:underline p-2"
                     >
                         Create One
-                    </a>
+                    </Link>
                 </p>
             </section>
         </main>

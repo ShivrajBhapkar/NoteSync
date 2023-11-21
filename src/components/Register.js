@@ -1,7 +1,7 @@
 import React from "react";
 import axios from "../axios-config";
 import { useSelector } from "react-redux";
-import { useNavigate, Navigate } from "react-router-dom";
+import { useNavigate, Navigate, Link } from "react-router-dom";
 import TokenService from "../Services/token.service";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -148,12 +148,12 @@ function Register() {
                 </Formik>
                 <p className="text-center text-sm">
                     Already have an account?{" "}
-                    <a
-                        href="/login"
+                    <Link
+                        to="/login"
                         className="text-indigo-500 hover:underline p-2"
                     >
                         Log In
-                    </a>
+                    </Link>
                 </p>
             </section>
         </main>
