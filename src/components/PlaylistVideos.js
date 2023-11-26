@@ -48,7 +48,7 @@ const PlaylistVideos = () => {
     }
     return (
         <div className="flex lg:p-4 md:p-4 p-0 max-h-screen max-w-screen lg:flex-row xl:flex-row flex-col overflow-y-auto">
-            <div className="lg:w-[35%] xl:w-[35%] sm:w-[100%] w-[100%] max-w-[100vw]">
+            <div className="lg:w-[35%] xl:w-[35%] sm:w-[100%] w-[100%] max-w-[100vw] mr-2">
                 <div className="w-full max-w-[100%] mt-2 p-4 shadow-lg bg-gradient-to-br from-blue-200 to-blue-400 rounded-lg overflow-x-hidden  h-[100%]">
                     <Back />
                     <img

@@ -44,7 +44,7 @@ const Body = () => {
             <div
                 className={`${
                     isSmallScreen ? "fixed inset-y-0 z-50" : ""
-                } w-[60%] md:w-[15%] lg:w-[15%] xl:w-[15%] h-full ${
+                } w-[100%] md:w-[15%] lg:w-[15%] xl:w-[15%] h-full ${
                     showSidebar ? "block" : "hidden"
                 } bg-gray-800`}
             >
