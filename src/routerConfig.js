@@ -1,5 +1,6 @@
 import React from "react";
-import { HashRouter as Router, Route,Routes, Navigate } from "react-router-dom";
+import { HashRouter as Router, Route, Routes, Navigate } from "react-router-dom";
+import ErrorBoundary from "./components/ui/error-boundry";
 import Body from "./components/Body";
 import NoteTakingApp from "./components/NoteTakingApp ";
 import UserUnTrackPlayList from "./components/UserUnTrackPlayList";
@@ -28,7 +29,11 @@ const AppRouter = () => {
                     path="/"
                     element={<HomePage />} // Render the HomePage component
                 />
-                <Route path="/dashboard" element={<Body />}>
+                <Route
+                    path="/dashboard"
+                    element={<Body />}
+                    errorElement={<ErrorBoundary />}
+                >
                     <Route
                         index
                         element={
@@ -54,6 +59,7 @@ const AppRouter = () => {
                 </Route>
                 <Route path="/login" element={<LoginComponent />} />
                 <Route path="/register" element={<Register />} />
+                <Route path="*" element={<Navigate to="/" />} />
             </Routes>
         </Router>
     );
