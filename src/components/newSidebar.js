@@ -75,7 +75,8 @@ const Sidebar = ({ isSmallScreen, handleHamburgerClick }) => {
                     <AlertModel
                         onConfirm={handleLogout}
                         onCancel={closeLogoutModal}
-                        label="Are you sure want to logout?"
+                        label="Are you sure?"
+                        sublabel="This action will log you out of your account"
                     />
                 )}
             </div>
