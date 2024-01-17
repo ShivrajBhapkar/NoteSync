@@ -3,6 +3,7 @@ import { FaTimes } from "react-icons/fa";
 import { useNavigate, NavLink, Link } from "react-router-dom";
 import { FaSignOutAlt } from "react-icons/fa";
 import { logout } from "../Services/auth";
+import tokenService from "../Services/token.service";
 import { MdPlaylistAddCheck, MdPlaylistRemove } from "react-icons/md";
 import AlertModel from "./ui/AlertModel";
 const links = [
@@ -20,7 +21,7 @@ const links = [
 const Sidebar = ({ isSmallScreen, handleHamburgerClick }) => {
     const navigate = useNavigate();
     const [isLogoutModalOpen, setLogoutModalOpen] = useState(false);
-
+const { userId } = tokenService.getUser();
     const openLogoutModal = () => {
         setLogoutModalOpen(true);
     };
@@ -29,7 +30,7 @@ const Sidebar = ({ isSmallScreen, handleHamburgerClick }) => {
         setLogoutModalOpen(false);
     };
     const handleLogout = async () => {
-        await logout();
+        await logout({ userId });
         closeLogoutModal();
         navigate("/login");
     };

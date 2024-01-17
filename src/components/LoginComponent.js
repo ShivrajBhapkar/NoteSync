@@ -1,7 +1,7 @@
 import React from "react";
 import { useNavigate, Navigate } from "react-router-dom";
 import { Link, redirect, useLocation } from "react-router-dom";
-import { login } from "../Services/auth";
+import { login, loginDemoUser } from "../Services/auth";
 import TokenService from "../Services/token.service";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import * as Yup from "yup";
@@ -13,6 +13,11 @@ const LoginComponent = () => {
     }
     const handleLogin = async (values) => {
         await login(values);
+        navigate("/dashboard");
+    };
+
+    const handleDemoUserLogin = async () => {
+        await loginDemoUser();
         navigate("/dashboard");
     };
     const validationSchema = Yup.object().shape({
@@ -95,7 +100,12 @@ const LoginComponent = () => {
                         </Form>
                     )}
                 </Formik>
-
+                <button
+                    onClick={handleDemoUserLogin}
+                    className="bg-green-500 hover:bg-green-700 text-white px-4 py-2 rounded-md w-full"
+                >
+                    Demo User
+                </button>
                 <p className="text-center text-sm">
                     No account?
                     <Link
