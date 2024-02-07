@@ -1,7 +1,17 @@
 import React from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
+import Editor from "ckeditor5-custom-build/build/ckeditor";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+const editorConfiguration = {
+    toolbar: ["bold", "italic", "link", "blockquote", "list"],
+};
 const EditNoteModal = ({ isOpen, onClose, note, onNoteUpdate }) => {
+    function decodeEntities(encodedString) {
+        const textarea = document.createElement("textarea");
+        textarea.innerHTML = encodedString;
+        return textarea.value;
+    }
     const formik = useFormik({
         initialValues: {
             noteTitle: note.title,
@@ -65,12 +75,28 @@ const EditNoteModal = ({ isOpen, onClose, note, onNoteUpdate }) => {
                             ) : null}
                         </div>
                         <div className="mb-4">
-                            <textarea
-                                name="noteText"
-                                className="w-full border rounded px-2 py-1"
-                                onChange={formik.handleChange}
-                                onBlur={formik.handleBlur}
-                                value={formik.values.noteText}
+                            <CKEditor
+                                editor={Editor}
+                                config={editorConfiguration}
+                                data={formik.values.noteText}
+                                onChange={(event, editor) => {
+                                    const data = editor.getData({
+                                        asText: false,
+                                    });
+                                    formik.setFieldValue("noteText", data);
+                                }}
+                                onReady={(editor) => {
+                                    const decodedNoteText = decodeEntities(
+                                        formik.values.noteText
+                                    );
+                                    editor.setData(decodedNoteText);
+                                }}
+                                onBlur={(event, editor) => {
+                                    console.log("Blur.", editor);
+                                }}
+                                onFocus={(event, editor) => {
+                                    console.log("Focus.", editor);
+                                }}
                             />
                             {formik.touched.noteText &&
                             formik.errors.noteText ? (

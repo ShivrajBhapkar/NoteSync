@@ -215,7 +215,7 @@ const NoteTakingApp = () => {
     };
     return dataIsReady ? (
         <div className="flex lg:h-full md:h-full xl:h-full  flex-col lg:flex-row xl:flex-row sm:overflow-y-auto lg:overflow-y-hidden xl:overflow-y-hidden overflow-y-auto ">
-            <div className="flex-[60%]">
+            <div className="flex-[60%] p-4 h-screen md::overflow-y-auto lg:overflow-y-auto xl:overflow-y-auto">
                 <Back />
                 <YouTube videoId={videoId} onReady={onReady} opts={opts} />
                 <div className="w-full pl-2">
@@ -336,21 +336,28 @@ const NoteTakingApp = () => {
                                                     </span>
                                                 </strong>
                                                 <div>
+                                                    {/* Use dangerouslySetInnerHTML to render HTML content */}
                                                     {note?.text.length > 10 ? (
                                                         <div>
-                                                            {note?.text.substring(
-                                                                0,
-                                                                10
-                                                            )}
-                                                            {note?.text.length >
-                                                            10
-                                                                ? "..."
-                                                                : ""}
+                                                            <div
+                                                                dangerouslySetInnerHTML={{
+                                                                    __html: note.text.substring(
+                                                                        0,
+                                                                        10
+                                                                    ),
+                                                                }}
+                                                            />
+                                                            {"..."}
                                                         </div>
                                                     ) : (
-                                                        <div>{note?.text}</div>
+                                                        <div
+                                                            dangerouslySetInnerHTML={{
+                                                                __html: note.text,
+                                                            }}
+                                                        />
                                                     )}
                                                 </div>
+
                                                 <div>
                                                     <button
                                                         onClick={() =>
