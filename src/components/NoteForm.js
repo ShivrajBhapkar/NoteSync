@@ -1,13 +1,10 @@
 // NoteForm.js
-import React from "react";
+import React, { useRef } from "react";
+import { Editor } from "@tinymce/tinymce-react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 import { BiSolidSend } from "react-icons/bi";
-import Editor from "ckeditor5-custom-build/build/ckeditor";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-const editorConfiguration = {
-    toolbar: ["bold", "italic", "link", "blockquote", "list"],
-};
+
 const NoteForm = ({ onSubmit }) => {
     const validationSchema = Yup.object({
         noteTitle: Yup.string()
@@ -31,6 +28,10 @@ const NoteForm = ({ onSubmit }) => {
             formik.resetForm();
         },
     });
+    const editorRef = useRef(null);
+    const handleEditorChange = (content, editor) => {
+        formik.setFieldValue("noteText", content, true); // Set the third parameter to true for immediate update
+    };
 
     return (
         <form onSubmit={formik.handleSubmit}>
@@ -58,34 +59,27 @@ const NoteForm = ({ onSubmit }) => {
                 ) : null}
             </div>
             <div>
-                {/* <textarea
-                    rows="4"
-                    id="noteText"
-                    name="noteText"
-                    value={formik.values.noteText}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                    className="max-w-md w-full border-2 border-gray-300 shadow-md border-solid solid  rounded-md px-4 py-1 leading-5 sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-200"
-                    placeholder="Add your note here ..."
-                /> */}
                 <div className="max-w-lg w-full   rounded-md py-1 leading-5 sm:text-sm sm:leading-5 resize-none focus:outline-none focus:border-blue-500 bg-gray-200">
-                    <CKEditor
-                        editor={Editor}
-                        config={editorConfiguration}
-                        data={formik.values.noteText}
-                        onChange={(event, editor) => {
-                            const data = editor.getData();
-                            formik.setFieldValue("noteText", data);
-                        }}
-                        onReady={(editor) => {
-                            // You can store the "editor" and use when it is needed.
-                            console.log("Editor is ready to use!", editor);
-                        }}
-                        onBlur={(event, editor) => {
-                            console.log("Blur.", editor);
-                        }}
-                        onFocus={(event, editor) => {
-                            console.log("Focus.", editor);
+                    <Editor
+                        apiKey="9qyj6xrdheyz8gp44n9es375urkqrtt915o40ou3szeowydi"
+                        value={formik.values.noteText}
+                        onInit={(evt, editor) => (editorRef.current = editor)}
+                        onEditorChange={handleEditorChange}
+                        init={{
+                            menubar: "file edit view",
+                            height: 300,
+                            plugins: [
+                                "mentions advlist autolink lists link image charmap print preview anchor",
+                                "searchreplace visualblocks code fullscreen",
+                                "insertdatetime media paste code help wordcount",
+                            ],
+                            toolbar:
+                                "undo redo | formatselect | " +
+                                "bold italic backcolor | alignleft aligncenter " +
+                                "alignright alignjustify | bullist numlist outdent indent | " +
+                                "removeformat | emoticons| help",
+                            content_style:
+                                "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                         }}
                     />
                 </div>

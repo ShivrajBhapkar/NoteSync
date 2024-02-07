@@ -1,17 +1,13 @@
-import React from "react";
+import React, { useRef } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
-import Editor from "ckeditor5-custom-build/build/ckeditor";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
-const editorConfiguration = {
-    toolbar: ["bold", "italic", "link", "blockquote", "list"],
-};
+import { Editor } from "@tinymce/tinymce-react";
+
 const EditNoteModal = ({ isOpen, onClose, note, onNoteUpdate }) => {
-    function decodeEntities(encodedString) {
-        const textarea = document.createElement("textarea");
-        textarea.innerHTML = encodedString;
-        return textarea.value;
-    }
+    const editorRef = useRef(null);
+    const handleEditorChange = (content, editor) => {
+        formik.setFieldValue("noteText", content, true); // Set the third parameter to true for immediate update
+    };
     const formik = useFormik({
         initialValues: {
             noteTitle: note.title,
@@ -75,35 +71,30 @@ const EditNoteModal = ({ isOpen, onClose, note, onNoteUpdate }) => {
                             ) : null}
                         </div>
                         <div className="mb-4">
-                            <CKEditor
-                                editor={Editor}
-                                config={editorConfiguration}
-                                data={formik.values.noteText}
-                                onChange={(event, editor) => {
-                                    const data = editor.getData({
-                                        asText: false,
-                                    });
-                                    formik.setFieldValue("noteText", data);
-                                }}
-                                onReady={(editor) => {
-                                    const decodedNoteText = decodeEntities(
-                                        formik.values.noteText
-                                    );
-                                    editor.setData(decodedNoteText);
-                                }}
-                                onBlur={(event, editor) => {
-                                    console.log("Blur.", editor);
-                                }}
-                                onFocus={(event, editor) => {
-                                    console.log("Focus.", editor);
+                            <Editor
+                                apiKey="9qyj6xrdheyz8gp44n9es375urkqrtt915o40ou3szeowydi"
+                                value={formik.values.noteText}
+                                onInit={(evt, editor) =>
+                                    (editorRef.current = editor)
+                                }
+                                onEditorChange={handleEditorChange}
+                                init={{
+                                    height: 300,
+                                    menubar: "file edit view",
+                                    plugins: [
+                                        "mentions advlist autolink lists link image charmap print preview anchor",
+                                        "searchreplace visualblocks code fullscreen",
+                                        "insertdatetime media paste code help wordcount",
+                                    ],
+                                    toolbar:
+                                        "undo redo | formatselect | " +
+                                        "bold italic backcolor | alignleft aligncenter " +
+                                        "alignright alignjustify | bullist numlist outdent indent | " +
+                                        "removeformat | emoticons| help",
+                                    content_style:
+                                        "body { font-family:Helvetica,Arial,sans-serif; font-size:14px }",
                                 }}
                             />
-                            {formik.touched.noteText &&
-                            formik.errors.noteText ? (
-                                <div className="text-red-500">
-                                    {formik.errors.noteText}
-                                </div>
-                            ) : null}
                         </div>
                         <div className="flex justify-end">
                             <button
