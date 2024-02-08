@@ -3,7 +3,7 @@ import { Navigate } from "react-router-dom";
 import LoginComponent from "./components/LoginComponent";
 
 const instance = axios.create({
-    baseURL: "https://notesync-7yna.onrender.com",
+    baseURL: "https://notesync-7yna.onrender.com/v1",
     headers: {
         "Content-Type": "application/json",
     },
