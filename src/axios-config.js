@@ -3,8 +3,7 @@ import { Navigate } from "react-router-dom";
 import LoginComponent from "./components/LoginComponent";
 
 const instance = axios.create({
-    baseURL:
-        "http://localhost:3001/v1", // Your API base URL
+    baseURL: "https://notesync-7yna.onrender.com",
     headers: {
         "Content-Type": "application/json",
     },
